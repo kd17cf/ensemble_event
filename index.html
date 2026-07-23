@@ -143,11 +143,23 @@ button,input,select{touch-action:manipulation}
 <div class="row"><label>イベント楽曲特効倍率</label><input id="m_eventBonus" type="number" placeholder="自動" min="0"><span class="unit">%</span></div>
 <div class="row"><label>通常ライブの使用BP</label><select id="m_bp"><option>1</option><option>2</option><option>3</option><option>6</option><option selected>10</option></select><span class="unit">BP</span></div>
 <div class="row"><label>イベント楽曲のパス消費</label><select id="m_pass"><option>100</option><option>500</option><option selected>1000</option><option>2000</option></select><span class="unit">枚</span></div>
+</div>
+<div class="card"><h2>ダイヤ計算用（任意）</h2>
+<div class="row"><label>所持ホイッスル</label><input id="m_whistle" type="number" value="0" min="0"><span class="unit">個</span></div>
+<div class="row"><label>所持メガホン</label><input id="m_megaphone" type="number" value="0" min="0"><span class="unit">個</span></div>
+<div class="row"><label>現在所有ダイヤ</label><input id="m_ownedDia" type="number" value="0" min="0"><span class="unit">個</span></div>
 <div class="row"><label>1日に使える自然回復BP</label><input id="m_natural" type="number" value="40" min="0"><span class="unit">BP</span></div>
-<p class="note">自然回復は寝落ち分を引いた1日あたりBP（既定40）で、残り時間から換算します。</p>
+<p class="note">ポイント報酬のホイッスル・メガホン・ダイヤは目標までの差分から自動加算します（新曲報酬表）。自然回復は寝落ち分を引いた1日あたりBP（既定40）で換算します。</p>
 </div>
 <div class="card"><h2>残りの計算結果</h2><div id="m_warn" class="warn"></div>
-<div class="result"><span>通常ライブプレイ回数</span><strong id="mr_plays">-</strong></div><div class="result"><span>目標までの使用BP</span><strong id="mr_bp">-</strong></div><div class="result"><span>終了までに自然回復するBP</span><strong id="mr_naturalBp">-</strong></div><div class="result highlight"><span>自然回復を引いた必要ダイヤ</span><strong id="mr_dia">-</strong></div><div class="result"><span>イベント楽曲プレイ回数</span><strong id="mr_eventPlays">-</strong></div><div class="result"><span>現時点からのプレイ時間</span><strong id="mr_time">-</strong></div><div class="result"><span>獲得ファン人数（1人あたり）</span><strong id="mr_fans">-</strong></div>
+<div class="result"><span>通常ライブプレイ回数</span><strong id="mr_plays">-</strong></div>
+<div class="result"><span>目標までの使用BP</span><strong id="mr_bp">-</strong></div>
+<div class="result"><span>終了までに自然回復するBP</span><strong id="mr_naturalBp">-</strong></div>
+<div class="result"><span>今後のポイント報酬（BP換算）</span><strong id="mr_rewards">-</strong></div>
+<div class="result highlight"><span>用意すべきダイヤ数</span><strong id="mr_dia">-</strong></div>
+<div class="result"><span>イベント楽曲プレイ回数</span><strong id="mr_eventPlays">-</strong></div>
+<div class="result"><span>現時点からのプレイ時間</span><strong id="mr_time">-</strong></div>
+<div class="result"><span>獲得ファン人数（1人あたり）</span><strong id="mr_fans">-</strong></div>
 </div></div></section>
 
 <section id="progress" class="panel"><div class="grid">
@@ -240,6 +252,7 @@ button,input,select{touch-action:manipulation}
     <div class="row"><label>所持メガホン</label><input id="t_megaphone" type="number" min="0"><span class="unit">個</span></div>
     <div class="row"><label>現在所有ダイヤ</label><input id="t_ownedDia" type="number" min="0"><span class="unit">個</span></div>
     <div class="row"><label>1日に使える自然回復BP</label><input id="t_natural" type="number" value="40" min="0"><span class="unit">BP</span></div>
+    <p class="note">ポイント報酬のホイッスル・メガホン・ダイヤは目標までの差分から自動加算します（ツアー報酬表）。</p>
   </div>
   <div class="card">
     <h2>残りの計算結果</h2><div id="t_warn" class="warn"></div>
@@ -268,8 +281,11 @@ function safeStorageGet(key){try{return window.localStorage.getItem(key)}catch(e
 function safeStorageSet(key,value){try{window.localStorage.setItem(key,value)}catch(e){}}
 function safeStorageRemove(key){try{window.localStorage.removeItem(key)}catch(e){}}
 
-const rewardTableNew=[
+const rewardTableSong=[
  [0.6,3,0,0],[1,0,0,10],[4,3,0,0],[9,3,0,0],[14,3,0,0],[16,0,0,10],[26,3,0,0],[34,0,0,10],[36,5,0,0],[40,0,0,10],[42,5,0,0],[48,0,0,10],[54,5,0,0],[64,0,0,15],[105,0,1,0],[120,0,0,15],[255,0,1,0],[300,0,1,0]
+];
+const rewardTableTour=[
+ [0.6,3,0,0],[1,0,0,10],[4,3,0,0],[9,3,0,0],[14,3,0,0],[16,0,0,10],[26,3,0,0],[34,0,0,10],[36,5,0,0],[40,0,0,10],[42,5,0,0],[48,0,0,10],[54,5,0,0],[64,0,0,15],[105,0,1,0],[120,0,0,15],[255,0,1,0],[295,0,1,0]
 ];
 function selectMode(mode){
   modeScreen.classList.add('hidden');
@@ -279,8 +295,8 @@ function selectMode(mode){
   if(mode==='tour')calcTour();
 }
 function backToMode(){songApp.classList.add('hidden');tourApp.classList.add('hidden');modeScreen.classList.remove('hidden');safeStorageRemove('eventCalculatorMode');try{window.scrollTo({top:0,behavior:'smooth'})}catch(e){window.scrollTo(0,0)}}
-function futureRewardBp(current,target){
-  return rewardTableNew.reduce((sum,[pt,whistle,mega,dia])=>sum+(pt>current&&pt<=target?whistle+mega*10+dia/2:0),0);
+function futureRewardBp(current,target,table){
+  return table.reduce((sum,[pt,whistle,mega,dia])=>sum+(pt>current&&pt<=target?whistle+mega*10+dia/2:0),0);
 }
 function selectedTourEventType(){var e=document.querySelector('input[name="t_eventType"]:checked');return e?e.value:'mid'}
 function updateTourSchedule(){
@@ -317,7 +333,7 @@ function calcTour(){
     naturalByTime=Math.floor(hoursLeft*val('t_natural')/24);
   }
   tr_day.textContent=dayText;tr_elapsedDays.textContent=elapsedText;tr_daysLeft.textContent=leftText;tr_hoursLeft.textContent=hoursText;
-  const rewards=futureRewardBp(current,target),itemBp=val('t_whistle')+val('t_megaphone')*10;
+  const rewards=futureRewardBp(current,target,rewardTableTour),itemBp=val('t_whistle')+val('t_megaphone')*10;
   const dia=Math.max(Math.ceil((totalBp-naturalByTime-rewards-itemBp)*2-val('t_ownedDia')),0);
   tr_tours.textContent=fmt(tours)+'公演';tr_plays.textContent=fmt(tours*4)+'曲';tr_bp.textContent=fmt(totalBp)+'BP';tr_time.textContent=fmt(tours*12/60,1)+'時間';tr_natural.textContent=fmt(naturalByTime)+'BP';tr_rewards.textContent=fmt(rewards,1)+'BP';tr_dia.textContent=fmt(dia)+'個';tr_fans.textContent=fmt(tours*((fans[bp13]||0)*3+(fans[bp4]||0)))+'人';
   let warn='';if(current>target)warn='現在ポイントが目標ポイントを上回っています。';else if(perTour<=0)warn='スコア・BP・特効倍率を確認してください。';else if(!isNaN(now)&&!isNaN(start)&&now<start)warn='現在日時がイベント開始前です。';else if(!isNaN(now)&&!isNaN(end)&&now>end)warn='現在日時がイベント終了後です。';showWarn('t_warn',warn);
@@ -383,7 +399,8 @@ function passPlays(total,selected){let remain=total,plays=0;for(const size of [2
 const fans={1:10,2:16,3:20,6:30,10:40};
 function calcStart(){const target=val('s_target')*10000,ns=val('s_normalScore'),es=val('s_eventScore'),bp=val('s_bp');const nb=optional('s_normalBonus',calculatedBonus.normal/100),eb=optional('s_eventBonus',calculatedBonus.event/100);const normalBase=2000+floor(ns*10000*.0002),eventBase=10000+floor(es*10000*.0002);const combined10=normalBase*(1+nb)*10+eventBase*(1+eb);const perBp=floor(combined10/10);const pointsPerPlay=perBp*bp;const plays=pointsPerPlay>0?ceil(target/pointsPerPlay):0;const totalBp=plays*bp;const totalPass=totalBp*10;const eplays=passPlays(totalPass,val('s_pass'));const noBonusPerBp=(normalBase*10+eventBase)/10;const noBonusPlays=noBonusPerBp>0?ceil(target/(noBonusPerBp*bp)):0;const dia=totalBp*2-val('s_natural')*2*8-val('s_whistle')*2-val('s_rewardDia')-val('s_ownedDia');const gacha=Math.max(floor(((noBonusPlays*bp-totalBp)*2)/35),0);r_plays.textContent=fmt(plays)+'回';r_normalTime.textContent=fmt(plays*3/60,1)+'時間';r_eventPlays.textContent=fmt(eplays)+'回';r_totalTime.textContent=fmt((plays+eplays)*3/60,1)+'時間';r_bp.textContent=fmt(totalBp)+'BP';r_dia.textContent=fmt(Math.max(dia,0))+'個';r_gacha.textContent=fmt(gacha)+'連まで';r_fans.textContent=fmt(plays*(fans[bp]||0))+'人';showWarn('s_warn',pointsPerPlay<=0?'入力値を確認してください。':'')}
 function calcMid(){
-  const target=(val('m_target')-val('m_current'))*10000,owned=val('m_ownedPass'),ns=val('m_normalScore'),es=val('m_eventScore'),bp=val('m_bp');
+  const targetPt=val('m_target'),currentPt=val('m_current');
+  const target=(targetPt-currentPt)*10000,owned=val('m_ownedPass'),ns=val('m_normalScore'),es=val('m_eventScore'),bp=val('m_bp');
   const nb=optional('m_normalBonus',calculatedBonus.normal/100),eb=optional('m_eventBonus',calculatedBonus.event/100);
   const normalBase=2000+floor(ns*10000*.0002),eventBase=10000+floor(es*10000*.0002),normal=normalBase*(1+nb),event=eventBase*(1+eb);
   const remaining=target-floor(owned/100)*event;
@@ -405,12 +422,16 @@ function calcMid(){
     elapsedText=fmt(elapsedHours/24,1)+'日';
     leftText=fmt(hoursLeft/24,1)+'日';
     hoursText=fmt(hoursLeft,1)+'時間';
-    naturalBp=Math.floor(hoursLeft*val('m_natural')/24); // 寝落ち分を引いた1日あたりBPで換算
+    naturalBp=Math.floor(hoursLeft*val('m_natural')/24);
   }
+  const rewards=futureRewardBp(currentPt,targetPt,rewardTableSong);
+  const itemBp=val('m_whistle')+val('m_megaphone')*10;
+  const dia=Math.max(Math.ceil((usedBp-naturalBp-rewards-itemBp)*2-val('m_ownedDia')),0);
   mr_day.textContent=dayText;mr_elapsedDays.textContent=elapsedText;mr_daysLeft.textContent=leftText;mr_hoursLeft.textContent=hoursText;
   mr_plays.textContent=fmt(plays)+'回';mr_bp.textContent=fmt(usedBp)+'BP';mr_naturalBp.textContent=fmt(naturalBp)+'BP';
-  mr_dia.textContent=fmt(Math.max((usedBp-naturalBp)*2,0))+'個';mr_eventPlays.textContent=fmt(eplays)+'回';mr_time.textContent=fmt((plays+eplays)*3/60,1)+'時間';mr_fans.textContent=fmt(plays*(fans[bp]||0))+'人';
-  let warn='';if(val('m_current')>val('m_target'))warn='現在ポイントが目標を上回っています。';else if(!isNaN(nowDt)&&!isNaN(startDt)&&nowDt<startDt)warn='現在日時がイベント開始前です。';else if(!isNaN(nowDt)&&!isNaN(endDt)&&nowDt>endDt)warn='現在日時がイベント終了後です。';showWarn('m_warn',warn)
+  mr_rewards.textContent=fmt(rewards,1)+'BP';mr_dia.textContent=fmt(dia)+'個';
+  mr_eventPlays.textContent=fmt(eplays)+'回';mr_time.textContent=fmt((plays+eplays)*3/60,1)+'時間';mr_fans.textContent=fmt(plays*(fans[bp]||0))+'人';
+  let warn='';if(currentPt>targetPt)warn='現在ポイントが目標を上回っています。';else if(!isNaN(nowDt)&&!isNaN(startDt)&&nowDt<startDt)warn='現在日時がイベント開始前です。';else if(!isNaN(nowDt)&&!isNaN(endDt)&&nowDt>endDt)warn='現在日時がイベント終了後です。';showWarn('m_warn',warn)
 }
 
 function isoLocal(d){const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${day}`}
