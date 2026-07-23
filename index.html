@@ -143,6 +143,8 @@ button,input,select{touch-action:manipulation}
 <div class="row"><label>イベント楽曲特効倍率</label><input id="m_eventBonus" type="number" placeholder="自動" min="0"><span class="unit">%</span></div>
 <div class="row"><label>通常ライブの使用BP</label><select id="m_bp"><option>1</option><option>2</option><option>3</option><option>6</option><option selected>10</option></select><span class="unit">BP</span></div>
 <div class="row"><label>イベント楽曲のパス消費</label><select id="m_pass"><option>100</option><option>500</option><option selected>1000</option><option>2000</option></select><span class="unit">枚</span></div>
+<div class="row"><label>1日に使える自然回復BP</label><input id="m_natural" type="number" value="40" min="0"><span class="unit">BP</span></div>
+<p class="note">自然回復は寝落ち分を引いた1日あたりBP（既定40）で、残り時間から換算します。</p>
 </div>
 <div class="card"><h2>残りの計算結果</h2><div id="m_warn" class="warn"></div>
 <div class="result"><span>通常ライブプレイ回数</span><strong id="mr_plays">-</strong></div><div class="result"><span>目標までの使用BP</span><strong id="mr_bp">-</strong></div><div class="result"><span>終了までに自然回復するBP</span><strong id="mr_naturalBp">-</strong></div><div class="result highlight"><span>自然回復を引いた必要ダイヤ</span><strong id="mr_dia">-</strong></div><div class="result"><span>イベント楽曲プレイ回数</span><strong id="mr_eventPlays">-</strong></div><div class="result"><span>現時点からのプレイ時間</span><strong id="mr_time">-</strong></div><div class="result"><span>獲得ファン人数（1人あたり）</span><strong id="mr_fans">-</strong></div>
@@ -323,22 +325,21 @@ function calcTour(){
 function initTourDates(){const now=new Date();if(!t_now.value)t_now.value=isoLocalDateTime(now);updateTourSchedule()}
 function resetTour(){t_target.value=350;t_current.value='';t_score13.value=400;t_score4.value=450;t_bonus.value='';t_fever.value=100;t_bp13.value=3;t_bp4.value=10;t_whistle.value='';t_megaphone.value='';t_ownedDia.value='';t_natural.value=40;t_manualSchedule.checked=false;initTourDates();calcTour();}
 
-const bonusRates={
-  5:[0,20,50,75,100,150],
-  4:[0,5,15,25,35,50],
-  3:[0,1,2,3,4,5]
-};
+const R5=[0,20,50,75,100,150],R4=[0,5,15,25,35,50],R3=[0,1,2,3,4,5];
+const R4s=[0,7,20,30,45,60],R4t=[0,4,11,18,25,35],R5t=[0,15,35,50,70,100];
 const scoutTypes={
-  basic:{label:'基本スカウト',cards:[['☆5',5],['☆4',4],['☆3',3]]},
-  shuffle:{label:'シャッフルスカウト',cards:[['☆5',5],['☆4',4]]},
-  fourTwo:{label:'☆4カード二種',cards:[['☆5',5],['☆4①',4],['☆4②',4],['☆3',3]]},
-  fiveTwo:{label:'☆5カード二種',cards:[['☆5①',5],['☆5②',5],['☆4①',4],['☆4②',4]]}
+  basic:{label:'基本スカウト',cards:[['☆5',R5],['☆4',R4],['☆3',R3]]},
+  shuffle:{label:'シャッフルスカウト',cards:[['☆5',R5],['☆4',R4s]]},
+  fourTwo:{label:'☆4カード二種',cards:[['☆5',R5],['☆4①',R4t],['☆4②',R4t],['☆3',R3]]},
+  fiveTwo:{label:'☆5カード二種',cards:[['☆5①',R5t],['☆5②',R5t],['☆4①',R4t],['☆4②',R4t]]}
 };
+function cardBonusSelect(id,rates,cls){return `<select class="${cls}" id="${id}" data-rates="${rates.join(',')}">${[0,1,2,3,4,5].map(v=>`<option value="${v}">${v}</option>`).join('')}</select>`}
+function bonusFromInput(e){const count=clampBonusInput(e),rates=String(e.dataset.rates||'').split(',').map(Number);return rates[count]||0}
 let calculatedTourBonus=0;
 function tourScoutMarkup(index){const id=`tour_scout_${index}`;return `<div class="scout"><div class="scout-title">スカウト${index}</div><select class="scout-select tour-scout-select" id="${id}_type" data-index="${index}">${Object.entries(scoutTypes).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('')}</select><div class="scout-fields" id="${id}_fields"></div></div>`}
-function renderTourScoutFields(index){const base=`tour_scout_${index}`,type=document.getElementById(`${base}_type`).value,box=document.getElementById(`${base}_fields`);box.innerHTML=scoutTypes[type].cards.map((card,n)=>`<div class="row"><label>${card[0]}カード</label><select class="tour-bonus-input" id="${base}_card_${n}" data-rarity="${card[1]}">${[0,1,2,3,4,5].map(v=>`<option value="${v}">${v}</option>`).join('')}</select><span class="unit">枚</span></div>`).join('');box.querySelectorAll('select').forEach(e=>e.addEventListener('change',calculateTourBonus))}
+function renderTourScoutFields(index){const base=`tour_scout_${index}`,type=document.getElementById(`${base}_type`).value,box=document.getElementById(`${base}_fields`);box.innerHTML=scoutTypes[type].cards.map((card,n)=>`<div class="row"><label>${card[0]}カード</label>${cardBonusSelect(`${base}_card_${n}`,card[1],'tour-bonus-input')}<span class="unit">枚</span></div>`).join('');box.querySelectorAll('select').forEach(e=>e.addEventListener('change',calculateTourBonus))}
 function renderTourScouts(){tour_scouts.innerHTML=tourScoutMarkup(1)+tourScoutMarkup(2);[1,2].forEach(renderTourScoutFields);document.querySelectorAll('.tour-scout-select').forEach(e=>e.addEventListener('change',()=>{renderTourScoutFields(Number(e.dataset.index));calculateTourBonus()}))}
-function calculateTourBonus(){let total=0;document.querySelectorAll('#tour_scouts .tour-bonus-input').forEach(e=>{const count=clampBonusInput(e);total+=bonusRates[Number(e.dataset.rarity)][count]});calculatedTourBonus=total;tb_total.textContent=fmt(total,1)+'%';calcTour()}
+function calculateTourBonus(){let total=0;document.querySelectorAll('#tour_scouts .tour-bonus-input').forEach(e=>{total+=bonusFromInput(e)});calculatedTourBonus=total;tb_total.textContent=fmt(total,1)+'%';calcTour()}
 let calculatedBonus={normal:0,event:0};
 function val(id){return Number(document.getElementById(id).value)||0}
 function optional(id,fallback){const x=document.getElementById(id).value;return x===''?fallback:Number(x)/100}
@@ -360,13 +361,13 @@ function renderScoutFields(group,index){
   const base=`${group}_scout_${index}`;
   const type=document.getElementById(`${base}_type`).value;
   const box=document.getElementById(`${base}_fields`);
-  box.innerHTML=scoutTypes[type].cards.map((card,n)=>`<div class="row"><label>${card[0]}カード</label><select class="bonus-input" id="${base}_card_${n}" data-rarity="${card[1]}">${[0,1,2,3,4,5].map(v=>`<option value="${v}">${v}</option>`).join('')}</select><span class="unit">枚</span></div>`).join('');
+  box.innerHTML=scoutTypes[type].cards.map((card,n)=>`<div class="row"><label>${card[0]}カード</label>${cardBonusSelect(`${base}_card_${n}`,card[1],'bonus-input')}<span class="unit">枚</span></div>`).join('');
   box.querySelectorAll('select').forEach(e=>e.addEventListener('change',calculateBonus));
 }
 function clampBonusInput(e){let n=Math.floor(Number(e.value)||0);n=Math.max(0,Math.min(5,n));e.value=n;return n}
 function groupBonus(group){
   let total=0;
-  document.querySelectorAll(`#${group}_scouts .bonus-input`).forEach(e=>{const count=clampBonusInput(e);total+=bonusRates[Number(e.dataset.rarity)][count]});
+  document.querySelectorAll(`#${group}_scouts .bonus-input`).forEach(e=>{total+=bonusFromInput(e)});
   return total;
 }
 function calculateBonus(){
@@ -404,7 +405,7 @@ function calcMid(){
     elapsedText=fmt(elapsedHours/24,1)+'日';
     leftText=fmt(hoursLeft/24,1)+'日';
     hoursText=fmt(hoursLeft,1)+'時間';
-    naturalBp=Math.floor(hoursLeft*2); // BPは30分で1回復
+    naturalBp=Math.floor(hoursLeft*val('m_natural')/24); // 寝落ち分を引いた1日あたりBPで換算
   }
   mr_day.textContent=dayText;mr_elapsedDays.textContent=elapsedText;mr_daysLeft.textContent=leftText;mr_hoursLeft.textContent=hoursText;
   mr_plays.textContent=fmt(plays)+'回';mr_bp.textContent=fmt(usedBp)+'BP';mr_naturalBp.textContent=fmt(naturalBp)+'BP';
