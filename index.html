@@ -151,8 +151,18 @@ button,input,select{touch-action:manipulation}
 <div class="row"><label>1日に使える自然回復BP</label><input id="m_natural" type="number" value="40" min="0"><span class="unit">BP</span></div>
 <p class="note">ポイント報酬のホイッスル・メガホン・ダイヤは目標までの差分から自動加算します（新曲報酬表）。自然回復は寝落ち分を引いた1日あたりBP（既定40）で換算します。</p>
 </div>
+<div class="card"><h2>お仕事（任意）</h2>
+<div class="same-bonus"><input id="m_workEnable" type="checkbox"><label for="m_workEnable">お仕事を計算に含める</label></div>
+<div id="m_workFields" class="event-scouts-disabled">
+<div class="row"><label>事業部Lv</label><select id="m_workLv"><option value="2">Lv.2</option><option value="3">Lv.3</option><option value="4">Lv.4</option><option value="5">Lv.5</option><option value="6">Lv.6</option><option value="7">Lv.7</option><option value="8">Lv.8</option><option value="9">Lv.9</option><option value="10" selected>Lv.10</option><option value="11">Lv.11</option><option value="12">Lv.12</option><option value="13">Lv.13</option><option value="14">Lv.14</option><option value="15">Lv.15</option></select><span class="unit"></span></div>
+<div class="row"><label>お仕事の使用BP</label><select id="m_workBp"><option value="0" selected>0</option><option value="1">1</option></select><span class="unit">BP</span></div>
+<p class="note" id="m_workInfo">回復 45分 / 最大 10枚</p>
+<p class="note">BP0: 375pt・PASS1枚　／　BP1: 1500pt・PASS4枚。終了までの回復分＋チケット最大所持前提。お仕事BPはライブBPと合算してダイヤ計算します。</p>
+</div>
+</div>
 <div class="card"><h2>残りの計算結果</h2><div id="m_warn" class="warn"></div>
 <div class="result"><span>通常ライブプレイ回数</span><strong id="mr_plays">-</strong></div>
+<div class="result"><span>お仕事プレイ回数</span><strong id="mr_workPlays">-</strong></div>
 <div class="result"><span>目標までの使用BP</span><strong id="mr_bp">-</strong></div>
 <div class="result"><span>終了までに自然回復するBP</span><strong id="mr_naturalBp">-</strong></div>
 <div class="result"><span>今後のポイント報酬（BP換算）</span><strong id="mr_rewards">-</strong></div>
@@ -255,10 +265,21 @@ button,input,select{touch-action:manipulation}
     <p class="note">ポイント報酬のホイッスル・メガホン・ダイヤは目標までの差分から自動加算します（ツアー報酬表）。</p>
   </div>
   <div class="card">
+    <h2>お仕事（任意）</h2>
+    <div class="same-bonus"><input id="t_workEnable" type="checkbox"><label for="t_workEnable">お仕事を計算に含める</label></div>
+    <div id="t_workFields" class="event-scouts-disabled">
+      <div class="row"><label>事業部Lv</label><select id="t_workLv"><option value="2">Lv.2</option><option value="3">Lv.3</option><option value="4">Lv.4</option><option value="5">Lv.5</option><option value="6">Lv.6</option><option value="7">Lv.7</option><option value="8">Lv.8</option><option value="9">Lv.9</option><option value="10" selected>Lv.10</option><option value="11">Lv.11</option><option value="12">Lv.12</option><option value="13">Lv.13</option><option value="14">Lv.14</option><option value="15">Lv.15</option></select><span class="unit"></span></div>
+      <div class="row"><label>お仕事の使用BP</label><select id="t_workBp"><option value="0" selected>0</option><option value="1">1</option></select><span class="unit">BP</span></div>
+      <p class="note" id="t_workInfo">回復 45分 / 最大 10枚</p>
+      <p class="note">BP0: 375pt　／　BP1: 1500pt。終了までの回復分＋チケット最大所持前提。お仕事BPはライブBPと合算してダイヤ計算します。</p>
+    </div>
+  </div>
+  <div class="card">
     <h2>残りの計算結果</h2><div id="t_warn" class="warn"></div>
     <div class="tour-results">
       <div class="result"><span>今後必要な公演回数</span><strong id="tr_tours">-</strong></div>
       <div class="result"><span>ライブプレイ回数</span><strong id="tr_plays">-</strong></div>
+      <div class="result"><span>お仕事プレイ回数</span><strong id="tr_workPlays">-</strong></div>
       <div class="result"><span>必要BP</span><strong id="tr_bp">-</strong></div>
       <div class="result"><span>残りプレイ時間</span><strong id="tr_time">-</strong></div>
       <div class="result"><span>終了までの自然回復BP</span><strong id="tr_natural">-</strong></div>
@@ -298,6 +319,32 @@ function backToMode(){songApp.classList.add('hidden');tourApp.classList.add('hid
 function futureRewardBp(current,target,table){
   return table.reduce((sum,[pt,whistle,mega,dia])=>sum+(pt>current&&pt<=target?whistle+mega*10+dia/2:0),0);
 }
+const officeByLv={
+  2:{min:56,max:3},3:{min:56,max:3},4:{min:53,max:3},5:{min:53,max:5},
+  6:{min:53,max:5},7:{min:50,max:5},8:{min:50,max:8},9:{min:45,max:8},
+  10:{min:45,max:10},11:{min:43,max:10},12:{min:43,max:11},13:{min:40,max:11},
+  14:{min:40,max:12},15:{min:35,max:12}
+};
+const workRewardByBp={0:{pass:1,pt:375},1:{pass:4,pt:1500}};
+function updateWorkUi(prefix){
+  const enable=document.getElementById(prefix+'_workEnable');
+  const fields=document.getElementById(prefix+'_workFields');
+  const infoEl=document.getElementById(prefix+'_workInfo');
+  if(!enable||!fields)return;
+  fields.classList.toggle('event-scouts-disabled',!enable.checked);
+  const info=officeByLv[val(prefix+'_workLv')]||officeByLv[10];
+  if(infoEl)infoEl.textContent=`回復 ${info.min}分 / 最大 ${info.max}枚`;
+}
+function calcWorkEstimate(prefix,hoursLeft){
+  const enable=document.getElementById(prefix+'_workEnable');
+  if(!enable||!enable.checked)return{enabled:false,plays:0,bp:0,pass:0,points:0};
+  const lv=val(prefix+'_workLv'),wbp=val(prefix+'_workBp');
+  const info=officeByLv[lv]||officeByLv[10];
+  const reward=workRewardByBp[wbp]||workRewardByBp[0];
+  const recovered=hoursLeft>0?floor(hoursLeft*60/info.min):0;
+  const plays=info.max+recovered;
+  return{enabled:true,plays,bp:plays*wbp,pass:plays*reward.pass,points:plays*reward.pt};
+}
 function selectedTourEventType(){var e=document.querySelector('input[name="t_eventType"]:checked');return e?e.value:'mid'}
 function updateTourSchedule(){
   const manual=t_manualSchedule.checked;
@@ -316,30 +363,35 @@ function calcTour(){
   const p13=(2500+score13*10000/5000)*(1+bonus);
   const p4=(2250+score4*10000/5000)*(1+bonus)*fever;
   const perTour=p13*3*bp13+p4*bp4;
-  const remaining=Math.max((target-current)*10000,0);
-  const tours=perTour>0?Math.ceil(remaining/perTour):0;
-  const totalBp=tours*(bp13*3+bp4);
   const start=t_startDateTime.value?new Date(t_startDateTime.value+'T15:00:00'):new Date(NaN);
   const end=t_endDateTime.value?new Date(t_endDateTime.value+'T22:00:00'):new Date(NaN);
   const now=t_now.value?new Date(t_now.value):new Date();
-  let dayText='-',elapsedText='-',leftText='-',hoursText='-',naturalByTime=0;
+  let dayText='-',elapsedText='-',leftText='-',hoursText='-',naturalByTime=0,hoursLeft=0;
   if(!isNaN(start)&&!isNaN(end)&&!isNaN(now)){
     const dayMs=86400000,startDay=new Date(start.getFullYear(),start.getMonth(),start.getDate()),nowDay=new Date(now.getFullYear(),now.getMonth(),now.getDate());
     const eventDay=Math.floor((nowDay-startDay)/dayMs)+1,totalDays=Math.floor((new Date(end.getFullYear(),end.getMonth(),end.getDate())-startDay)/dayMs)+1;
     const clamped=Math.max(0,Math.min(totalDays,eventDay));
     dayText=now<start?'開始前':now>end?'終了':`${clamped}日目 / ${totalDays}日`;
-    const elapsedHours=Math.max(0,(Math.min(now,end)-start)/3600000),hoursLeft=Math.max(0,(end-now)/3600000);
+    const elapsedHours=Math.max(0,(Math.min(now,end)-start)/3600000);
+    hoursLeft=Math.max(0,(end-now)/3600000);
     elapsedText=fmt(elapsedHours/24,1)+'日';leftText=fmt(hoursLeft/24,1)+'日';hoursText=fmt(hoursLeft,1)+'時間';
     naturalByTime=Math.floor(hoursLeft*val('t_natural')/24);
   }
+  updateWorkUi('t');
+  const work=calcWorkEstimate('t',hoursLeft);
+  const remaining=Math.max((target-current)*10000-work.points,0);
+  const tours=perTour>0?Math.ceil(remaining/perTour):0;
+  const liveBp=tours*(bp13*3+bp4),totalBp=liveBp+work.bp;
   tr_day.textContent=dayText;tr_elapsedDays.textContent=elapsedText;tr_daysLeft.textContent=leftText;tr_hoursLeft.textContent=hoursText;
   const rewards=futureRewardBp(current,target,rewardTableTour),itemBp=val('t_whistle')+val('t_megaphone')*10;
   const dia=Math.max(Math.ceil((totalBp-naturalByTime-rewards-itemBp)*2-val('t_ownedDia')),0);
-  tr_tours.textContent=fmt(tours)+'公演';tr_plays.textContent=fmt(tours*4)+'曲';tr_bp.textContent=fmt(totalBp)+'BP';tr_time.textContent=fmt(tours*12/60,1)+'時間';tr_natural.textContent=fmt(naturalByTime)+'BP';tr_rewards.textContent=fmt(rewards,1)+'BP';tr_dia.textContent=fmt(dia)+'個';tr_fans.textContent=fmt(tours*((fans[bp13]||0)*3+(fans[bp4]||0)))+'人';
+  tr_tours.textContent=fmt(tours)+'公演';tr_plays.textContent=fmt(tours*4)+'曲';
+  tr_workPlays.textContent=work.enabled?fmt(work.plays)+'回':'-';
+  tr_bp.textContent=fmt(totalBp)+'BP';tr_time.textContent=fmt(tours*12/60,1)+'時間';tr_natural.textContent=fmt(naturalByTime)+'BP';tr_rewards.textContent=fmt(rewards,1)+'BP';tr_dia.textContent=fmt(dia)+'個';tr_fans.textContent=fmt(tours*((fans[bp13]||0)*3+(fans[bp4]||0)))+'人';
   let warn='';if(current>target)warn='現在ポイントが目標ポイントを上回っています。';else if(perTour<=0)warn='スコア・BP・特効倍率を確認してください。';else if(!isNaN(now)&&!isNaN(start)&&now<start)warn='現在日時がイベント開始前です。';else if(!isNaN(now)&&!isNaN(end)&&now>end)warn='現在日時がイベント終了後です。';showWarn('t_warn',warn);
 }
 function initTourDates(){const now=new Date();if(!t_now.value)t_now.value=isoLocalDateTime(now);updateTourSchedule()}
-function resetTour(){t_target.value=350;t_current.value='';t_score13.value=400;t_score4.value=450;t_bonus.value='';t_fever.value=100;t_bp13.value=3;t_bp4.value=10;t_whistle.value='';t_megaphone.value='';t_ownedDia.value='';t_natural.value=40;t_manualSchedule.checked=false;initTourDates();calcTour();}
+function resetTour(){t_target.value=350;t_current.value='';t_score13.value=400;t_score4.value=450;t_bonus.value='';t_fever.value=100;t_bp13.value=3;t_bp4.value=10;t_whistle.value='';t_megaphone.value='';t_ownedDia.value='';t_natural.value=40;t_workEnable.checked=false;t_workLv.value=10;t_workBp.value=0;t_manualSchedule.checked=false;initTourDates();calcTour();}
 
 const R5=[0,20,50,75,100,150],R4=[0,5,15,25,35,50],R3=[0,1,2,3,4,5];
 const R4s=[0,7,20,30,45,60],R4t=[0,4,11,18,25,35],R5t=[0,15,35,50,70,100];
@@ -403,12 +455,8 @@ function calcMid(){
   const target=(targetPt-currentPt)*10000,owned=val('m_ownedPass'),ns=val('m_normalScore'),es=val('m_eventScore'),bp=val('m_bp');
   const nb=optional('m_normalBonus',calculatedBonus.normal/100),eb=optional('m_eventBonus',calculatedBonus.event/100);
   const normalBase=2000+floor(ns*10000*.0002),eventBase=10000+floor(es*10000*.0002),normal=normalBase*(1+nb),event=eventBase*(1+eb);
-  const remaining=target-floor(owned/100)*event;
-  const perBp=floor((normal*10+event)/10);
-  const plays=remaining>0&&perBp>0?ceil(remaining/(perBp*bp)):0;
-  const usedBp=plays*bp,totalPass=owned+usedBp*10,eplays=passPlays(totalPass,val('m_pass'));
   const startDt=m_startDateTime.value?new Date(m_startDateTime.value+'T15:00:00'):new Date(NaN),endDt=m_endDateTime.value?new Date(m_endDateTime.value+'T22:00:00'):new Date(NaN),nowDt=new Date(m_nowDateTime.value);
-  let dayText='-',elapsedText='-',leftText='-',hoursText='-',naturalBp=0;
+  let dayText='-',elapsedText='-',leftText='-',hoursText='-',naturalBp=0,hoursLeft=0;
   if(!isNaN(startDt)&&!isNaN(endDt)&&!isNaN(nowDt)){
     const dayMs=86400000;
     const startDay=new Date(startDt.getFullYear(),startDt.getMonth(),startDt.getDate());
@@ -418,17 +466,24 @@ function calcMid(){
     const clampedDay=Math.max(0,Math.min(totalDays,eventDay));
     dayText=nowDt<startDt?'開始前':nowDt>endDt?'終了':`${clampedDay}日目 / ${totalDays}日`;
     const elapsedHours=Math.max(0,(Math.min(nowDt,endDt)-startDt)/3600000);
-    const hoursLeft=Math.max(0,(endDt-nowDt)/3600000);
+    hoursLeft=Math.max(0,(endDt-nowDt)/3600000);
     elapsedText=fmt(elapsedHours/24,1)+'日';
     leftText=fmt(hoursLeft/24,1)+'日';
     hoursText=fmt(hoursLeft,1)+'時間';
     naturalBp=Math.floor(hoursLeft*val('m_natural')/24);
   }
+  updateWorkUi('m');
+  const work=calcWorkEstimate('m',hoursLeft);
+  const remaining=target-work.points-floor((owned+work.pass)/100)*event;
+  const perBp=floor((normal*10+event)/10);
+  const plays=remaining>0&&perBp>0?ceil(remaining/(perBp*bp)):0;
+  const liveBp=plays*bp,usedBp=liveBp+work.bp,totalPass=owned+work.pass+liveBp*10,eplays=passPlays(totalPass,val('m_pass'));
   const rewards=futureRewardBp(currentPt,targetPt,rewardTableSong);
   const itemBp=val('m_whistle')+val('m_megaphone')*10;
   const dia=Math.max(Math.ceil((usedBp-naturalBp-rewards-itemBp)*2-val('m_ownedDia')),0);
   mr_day.textContent=dayText;mr_elapsedDays.textContent=elapsedText;mr_daysLeft.textContent=leftText;mr_hoursLeft.textContent=hoursText;
-  mr_plays.textContent=fmt(plays)+'回';mr_bp.textContent=fmt(usedBp)+'BP';mr_naturalBp.textContent=fmt(naturalBp)+'BP';
+  mr_plays.textContent=fmt(plays)+'回';mr_workPlays.textContent=work.enabled?fmt(work.plays)+'回':'-';
+  mr_bp.textContent=fmt(usedBp)+'BP';mr_naturalBp.textContent=fmt(naturalBp)+'BP';
   mr_rewards.textContent=fmt(rewards,1)+'BP';mr_dia.textContent=fmt(dia)+'個';
   mr_eventPlays.textContent=fmt(eplays)+'回';mr_time.textContent=fmt((plays+eplays)*3/60,1)+'時間';mr_fans.textContent=fmt(plays*(fans[bp]||0))+'人';
   let warn='';if(currentPt>targetPt)warn='現在ポイントが目標を上回っています。';else if(!isNaN(nowDt)&&!isNaN(startDt)&&nowDt<startDt)warn='現在日時がイベント開始前です。';else if(!isNaN(nowDt)&&!isNaN(endDt)&&nowDt>endDt)warn='現在日時がイベント終了後です。';showWarn('m_warn',warn)
@@ -538,22 +593,26 @@ function initMidDates(){
 }
 
 function resetStart(){['s_target','s_normalScore','s_eventScore','s_natural'].forEach((id,i)=>document.getElementById(id).value=[2200,400,400,40][i]);['s_normalBonus','s_eventBonus','s_whistle','s_rewardDia','s_ownedDia'].forEach(id=>document.getElementById(id).value='');s_bp.value=6;s_pass.value=1000;calcStart()}
-document.querySelectorAll('#start input,#start select,#mid input,#mid select').forEach(e=>e.addEventListener('input',()=>{if(e.id==='m_nowDateTime'&&!m_manualSchedule.checked)updateEventSchedule();else if(e.id==='m_startDateTime'||e.id==='m_endDateTime')m_eventPeriod.textContent=formatEventPeriod(m_startDateTime.value,m_endDateTime.value);calcStart();calcMid();calcProgress()}));
+document.querySelectorAll('#start input,#start select,#mid input,#mid select').forEach(e=>e.addEventListener('input',()=>{if(e.id==='m_nowDateTime'&&!m_manualSchedule.checked)updateEventSchedule();else if(e.id==='m_startDateTime'||e.id==='m_endDateTime')m_eventPeriod.textContent=formatEventPeriod(m_startDateTime.value,m_endDateTime.value);if(e.id==='m_workEnable'||e.id==='m_workLv')updateWorkUi('m');calcStart();calcMid();calcProgress()}));
 document.querySelectorAll('input[name="m_eventType"]').forEach(e=>e.addEventListener('change',()=>{updateEventSchedule();calcMid();calcProgress()}));
 m_manualSchedule.addEventListener('change',()=>{updateEventSchedule();calcMid();calcProgress()});
+m_workEnable.addEventListener('change',()=>{updateWorkUi('m');calcMid()});
 document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab,.panel').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(b.dataset.tab).classList.add('active')});
 renderScouts();
 initMidDates();
+updateWorkUi('m');
 document.getElementById('same_event_bonus').addEventListener('change',calculateBonus);
 initProgress();
 calculateBonus();
 renderTourScouts();
 initTourDates();
+updateWorkUi('t');
 calculateTourBonus();
 document.querySelectorAll('.tour-tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tour-tab,.tour-panel').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(b.dataset.tourTab).classList.add('active')});
-document.querySelectorAll('#tourMid input,#tourMid select').forEach(e=>e.addEventListener('input',()=>{if(e.id==='t_now'&&!t_manualSchedule.checked)updateTourSchedule();else if(e.id==='t_startDateTime'||e.id==='t_endDateTime')t_eventPeriod.textContent=formatEventPeriod(t_startDateTime.value,t_endDateTime.value);calcTour()}));
+document.querySelectorAll('#tourMid input,#tourMid select').forEach(e=>e.addEventListener('input',()=>{if(e.id==='t_now'&&!t_manualSchedule.checked)updateTourSchedule();else if(e.id==='t_startDateTime'||e.id==='t_endDateTime')t_eventPeriod.textContent=formatEventPeriod(t_startDateTime.value,t_endDateTime.value);if(e.id==='t_workEnable'||e.id==='t_workLv')updateWorkUi('t');calcTour()}));
 document.querySelectorAll('input[name="t_eventType"]').forEach(e=>e.addEventListener('change',()=>{updateTourSchedule();calcTour()}));
 t_manualSchedule.addEventListener('change',()=>{updateTourSchedule();calcTour()});
+t_workEnable.addEventListener('change',()=>{updateWorkUi('t');calcTour()});
 
 function syncOptionCheckedStyles(){
   document.querySelectorAll('.event-type-option').forEach(function(label){
