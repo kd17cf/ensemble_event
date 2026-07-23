@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>イベント必要ダイヤ・時間計算ツール</title>
+<style>
+:root{--bg:#f7f8fc;--card:#fff;--text:#222638;--muted:#6d7285;--line:#e5e7ef;--accent:#5765e8;--accent2:#eef0ff;--input:#fff8cc;--result:#e8f4ff;--danger:#fff0f0;--green:#e9f8ef}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif;line-height:1.55}
+header{background:linear-gradient(135deg,#5967e8,#8c66da);color:#fff;padding:28px 18px} header .wrap{max-width:1050px;margin:auto} h1{font-size:clamp(22px,4vw,34px);margin:0 0 6px} header p{margin:0;opacity:.9}
+main{max-width:1050px;margin:22px auto 60px;padding:0 14px}.tabs{display:flex;gap:8px;overflow:auto;padding-bottom:8px;position:sticky;top:0;background:var(--bg);z-index:5}.tab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:10px 16px;white-space:nowrap;font-weight:700;cursor:pointer}.tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.panel{display:none}.panel.active{display:block}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 4px 16px rgba(35,40,90,.05)}.card.full{grid-column:1/-1} h2{font-size:19px;margin:0 0 14px} h3{font-size:16px;margin:18px 0 8px}.row{display:grid;grid-template-columns:minmax(160px,1fr) minmax(120px,180px) 58px;gap:8px;align-items:center;margin:9px 0}.row label{font-size:14px}.unit{font-size:13px;color:var(--muted)}input,select{width:100%;border:1px solid #cdd1df;border-radius:10px;padding:10px;font:inherit;background:var(--input)}input[type=checkbox]{width:auto;accent-color:var(--accent)}.result{background:var(--result);border:1px solid #cfe4f7;border-radius:12px;padding:11px 13px;display:flex;justify-content:space-between;gap:10px;margin:8px 0}.result strong{font-size:18px}.result.highlight{background:var(--green);border-color:#ccebd7}.bonus-card{background:linear-gradient(180deg,#fff,#f7f7ff);border:2px solid #dfe2ff}.bonus-card h2{display:flex;align-items:center;gap:8px}.bonus-total{margin-top:16px;padding:16px;border-radius:16px;background:linear-gradient(135deg,#5967e8,#8c66da);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:12px}.bonus-total span{font-weight:700}.bonus-total strong{font-size:30px;line-height:1}.same-bonus{display:flex;align-items:center;gap:8px;margin:0 0 12px;padding:11px 12px;border-radius:12px;background:#f2f3ff;font-weight:700}.same-bonus label{cursor:pointer}.event-scouts-disabled{opacity:.45;pointer-events:none}.note{font-size:13px;color:var(--muted)}.warn{background:var(--danger);border:1px solid #f4caca;border-radius:10px;padding:10px;color:#a33;display:none}.scout{border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:12px;background:#fff}.scout-title{font-weight:800;margin-bottom:10px}.scout-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.scout-fields .row{grid-template-columns:minmax(120px,1fr) minmax(90px,130px) 42px;margin:0}.scout-select{margin-bottom:12px}.cards-grid{display:grid;grid-template-columns:1fr repeat(5,70px);gap:6px;align-items:center}.cards-grid span{font-size:13px}.cards-grid input{padding:8px;text-align:center}.tiny{font-size:12px;color:var(--muted)}button.reset{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 14px;cursor:pointer;margin-top:12px}@media(max-width:760px){.grid{grid-template-columns:1fr}.row{grid-template-columns:1fr minmax(105px,145px) 48px}.cards-grid{grid-template-columns:1fr repeat(5,45px)}.card{padding:14px}}
+
+.event-schedule{background:#f7f7ff;border:1px solid #dfe2ff;border-radius:14px;padding:14px;margin-bottom:14px}.event-type-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.event-type-option{display:flex;align-items:center;gap:9px;border:1px solid #d8dbea;border-radius:12px;padding:12px;background:#fff;font-weight:700;cursor:pointer}.event-type-option:has(input:checked),.event-type-option.checked{border-color:var(--accent);background:var(--accent2);color:#3f49b9}.manual-toggle{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:13px;color:var(--muted)}.manual-toggle label{cursor:pointer}.manual-dates{display:none;margin-top:10px}.manual-dates.show{display:block}.event-period{margin-top:12px;padding:11px 12px;border-radius:12px;background:#fff;border:1px solid var(--line);font-size:14px}.event-period strong{display:block;font-size:16px;margin-top:2px}.event-period .error{color:#a33}
+.day-status{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:12px 0 4px}.day-pill{background:#f2f3ff;border:1px solid #dfe2ff;border-radius:14px;padding:12px;text-align:center}.day-pill span{display:block;font-size:12px;color:var(--muted)}.day-pill strong{display:block;font-size:20px;margin-top:3px}.current-day{background:#fff8cc!important}.progress-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:16px}.progress-linked-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:16px}.progress-table-wrap{overflow-x:auto}.progress-table{border-collapse:separate;border-spacing:0;min-width:980px;width:100%;font-size:13px}.progress-table th,.progress-table td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:8px;text-align:center;white-space:nowrap}.progress-table th:first-child,.progress-table td:first-child{position:sticky;left:0;background:#fff;z-index:2;text-align:left;font-weight:700;border-left:1px solid var(--line)}.progress-table tr:first-child th{border-top:1px solid var(--line)}.progress-table input{min-width:82px;padding:8px;text-align:right}.progress-table .derived{background:#f6f7fb}.progress-chart{width:100%;height:auto;min-height:320px;display:block}.chart-legend{display:flex;justify-content:center;gap:22px;margin-top:10px;font-size:13px}.legend-item{display:flex;align-items:center;gap:7px}.legend-line{width:24px;height:3px;border-radius:99px;background:#5d9df6}.legend-line.actual{background:#ef7777}.progress-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}@media(max-width:760px){.progress-controls,.progress-summary,.day-status,.progress-linked-summary{grid-template-columns:1fr 1fr}}
+
+.mode-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px;background:linear-gradient(135deg,#eef0ff,#f8f1ff)}
+.mode-box{width:min(760px,100%);background:#fff;border:1px solid var(--line);border-radius:24px;padding:26px;box-shadow:0 14px 40px rgba(35,40,90,.12);text-align:center}.mode-box h1{color:var(--text);font-size:clamp(24px,5vw,36px);margin:0 0 8px}.mode-box p{color:var(--muted);margin:0 0 22px}.mode-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.mode-card{border:2px solid #dfe2ff;background:#fff;border-radius:18px;padding:22px 16px;cursor:pointer;text-align:left;transition:.18s}.mode-card:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:0 8px 22px rgba(87,101,232,.14)}.mode-card strong{display:block;font-size:21px;margin-bottom:6px}.mode-card span{display:block;color:var(--muted);font-size:14px}.mode-card.tour{border-color:#d3eadb}.mode-card.tour:hover{border-color:#43a76b}.app-shell.hidden,.mode-screen.hidden{display:none}.mode-switch{border:1px solid rgba(255,255,255,.5);background:rgba(255,255,255,.15);color:#fff;border-radius:999px;padding:8px 13px;cursor:pointer;margin-top:12px}.tour-header{background:linear-gradient(135deg,#398e5b,#68b67f)}.tour-main{max-width:1050px;margin:22px auto 60px;padding:0 14px}.tour-note{background:#f0faf4;border:1px solid #cde9d7;border-radius:12px;padding:11px 13px;font-size:13px;color:#38634a;margin-bottom:14px}.tour-results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.tour-results .result{margin:0}.subtle-heading{font-size:14px;color:var(--muted);font-weight:700;margin:16px 0 5px}@media(max-width:760px){.mode-cards,.tour-results{grid-template-columns:1fr}}
+
+/* スマホ向け最適化 */
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{min-width:0;overflow-x:hidden;padding-bottom:env(safe-area-inset-bottom)}
+button,input,select{touch-action:manipulation}
+@media(max-width:600px){
+  header{padding:20px 14px 16px;padding-top:calc(20px + env(safe-area-inset-top))}
+  header h1{font-size:22px;line-height:1.35}
+  header p{font-size:13px}
+  main,.tour-main{margin:14px auto 36px;padding:0 10px}
+  .tabs{top:0;margin:0 -10px 12px;padding:8px 10px 10px;background:rgba(247,248,252,.96);backdrop-filter:blur(8px);-webkit-overflow-scrolling:touch}
+  .tab{min-height:44px;padding:10px 15px;font-size:14px;flex:0 0 auto}
+  .grid{gap:12px}
+  .card{border-radius:15px;padding:14px 12px}
+  .card h2{font-size:18px}
+  .row,.scout-fields .row{
+    grid-template-columns:minmax(0,1fr) auto;
+    grid-template-areas:"label label" "input unit";
+    gap:5px 8px;
+    margin:12px 0;
+  }
+  .row label,.scout-fields .row label{grid-area:label;font-size:14px;font-weight:600}
+  .row input,.row select,.scout-fields .row input,.scout-fields .row select{grid-area:input;min-width:0;font-size:16px;min-height:44px;padding:10px 11px}
+  .row .unit,.scout-fields .row .unit{grid-area:unit;align-self:center;min-width:42px;text-align:left}
+  input[type=checkbox],input[type=radio]{min-height:auto;transform:scale(1.15)}
+  .event-type-options{grid-template-columns:1fr 1fr;gap:8px}
+  .event-type-option{min-height:48px;padding:10px 8px;font-size:14px;justify-content:center}
+  .manual-toggle{min-height:44px}
+  .event-period strong{font-size:14px;overflow-wrap:anywhere}
+  .day-status{grid-template-columns:1fr 1fr;gap:8px}
+  .day-pill{padding:10px 6px}
+  .day-pill strong{font-size:17px}
+  .result{align-items:center;padding:11px 10px}
+  .result span{font-size:13px;line-height:1.35;padding-right:8px}
+  .result strong{font-size:17px;text-align:right;white-space:nowrap}
+  .tour-results{grid-template-columns:1fr}
+  .scout-fields{grid-template-columns:1fr}
+  .bonus-total{padding:14px}
+  .bonus-total strong{font-size:27px}
+  .mode-screen{align-items:flex-start;padding:calc(20px + env(safe-area-inset-top)) 12px 20px;overflow:auto}
+  .mode-box{margin:auto 0;border-radius:20px;padding:20px 14px}
+  .mode-box h1{font-size:26px}
+  .mode-cards{grid-template-columns:1fr;gap:12px}
+  .mode-card{min-height:104px;padding:18px 15px}
+  .mode-card strong{font-size:20px}
+  .mode-switch,.reset{min-height:44px;font-size:14px}
+  .progress-table-wrap{-webkit-overflow-scrolling:touch}
+  .progress-chart{min-height:240px}
+}
+
+</style>
+</head>
+<body>
+<div id="modeScreen" class="mode-screen">
+  <div class="mode-box">
+    <h1>イベント計算ツール</h1>
+    <p>計算したいイベント形式を選んでください。</p>
+    <div class="mode-cards">
+      <button class="mode-card" type="button" onclick="selectMode('song')"><strong>新曲イベント</strong><span>通常ライブ＋イベント楽曲（参加PASS）の計算</span></button>
+      <button class="mode-card tour" type="button" onclick="selectMode('tour')"><strong>ツアーイベント</strong><span>1〜3曲目＋4曲目（FEVER）の公演計算</span></button>
+    </div>
+  </div>
+</div>
+<div id="songApp" class="app-shell hidden">
+
+<header><div class="wrap"><h1>新曲イベント 必要ダイヤ・時間計算ツール</h1><p>入力内容は端末内で計算され、サーバーには送信されません。</p><button class="mode-switch" type="button" onclick="backToMode()">イベント形式を選び直す</button></div></header>
+<main>
+<div class="tabs">
+<button class="tab active" data-tab="bonus">特効倍率</button>
+<button class="tab" data-tab="start">イベント開始時</button>
+<button class="tab" data-tab="mid">途中経過</button>
+<button class="tab" data-tab="progress">イベント進捗</button>
+</div>
+
+<section id="start" class="panel"><div class="grid">
+<div class="card"><h2>目標・スコア</h2>
+<div class="row"><label>目標ポイント</label><input id="s_target" type="number" value="2200" min="0"><span class="unit">万pt</span></div>
+<div class="row"><label>通常ライブスコア</label><input id="s_normalScore" type="number" value="400" min="0"><span class="unit">万</span></div>
+<div class="row"><label>通常ライブ特効倍率</label><input id="s_normalBonus" type="number" placeholder="自動" min="0"><span class="unit">%</span></div>
+<div class="row"><label>イベント楽曲スコア</label><input id="s_eventScore" type="number" value="400" min="0"><span class="unit">万</span></div>
+<div class="row"><label>イベント楽曲特効倍率</label><input id="s_eventBonus" type="number" placeholder="自動" min="0"><span class="unit">%</span></div>
+<div class="row"><label>通常ライブの使用BP</label><select id="s_bp"><option>1</option><option>2</option><option>3</option><option selected>6</option><option>10</option></select><span class="unit">BP</span></div>
+<div class="row"><label>イベント楽曲のパス消費</label><select id="s_pass"><option>100</option><option>500</option><option selected>1000</option><option>2000</option></select><span class="unit">枚</span></div>
+<p class="note">特効倍率が空欄の場合、「特効倍率」タブの結果を使います。</p></div>
+<div class="card"><h2>ダイヤ計算用（任意）</h2>
+<div class="row"><label>獲得予定ホイッスル</label><input id="s_whistle" type="number" value="0" min="0"><span class="unit">個</span></div>
+<div class="row"><label>獲得予定ダイヤ</label><input id="s_rewardDia" type="number" value="0" min="0"><span class="unit">個</span></div>
+<div class="row"><label>現在所有ダイヤ</label><input id="s_ownedDia" type="number" value="0" min="0"><span class="unit">個</span></div>
+<div class="row"><label>1日に使える自然回復BP</label><input id="s_natural" type="number" value="40" min="0"><span class="unit">BP</span></div>
+</div>
+<div class="card full"><h2>計算結果</h2><div id="s_warn" class="warn"></div>
+<div class="grid">
+<div><div class="result"><span>通常ライブプレイ回数</span><strong id="r_plays">-</strong></div><div class="result"><span>通常ライブプレイ時間</span><strong id="r_normalTime">-</strong></div><div class="result"><span>イベント楽曲プレイ回数</span><strong id="r_eventPlays">-</strong></div><div class="result"><span>トータルプレイ時間</span><strong id="r_totalTime">-</strong></div></div>
+<div><div class="result"><span>トータル使用BP</span><strong id="r_bp">-</strong></div><div class="result highlight"><span>用意すべきダイヤ数</span><strong id="r_dia">-</strong></div><div class="result"><span>ガチャ撤退ライン</span><strong id="r_gacha">-</strong></div><div class="result"><span>獲得ファン人数（1人あたり）</span><strong id="r_fans">-</strong></div></div>
+</div><button class="reset" onclick="resetStart()">初期値に戻す</button></div>
+</div></section>
+
+<section id="mid" class="panel"><div class="grid">
+<div class="card"><h2>現在の状況</h2>
+<div class="event-schedule">
+<div class="event-type-options">
+<label class="event-type-option"><input type="radio" name="m_eventType" value="mid" checked>15日開始</label>
+<label class="event-type-option"><input type="radio" name="m_eventType" value="monthEnd">月末開始</label>
+</div>
+<div class="manual-toggle"><input id="m_manualSchedule" type="checkbox"><label for="m_manualSchedule">日程を手動変更</label></div>
+<div id="m_manualDates" class="manual-dates">
+<div class="row"><label>イベント開始日</label><input id="m_startDateTime" type="date"><span class="unit">15:00開始</span></div>
+<div class="row"><label>イベント終了日</label><input id="m_endDateTime" type="date"><span class="unit">22:00終了</span></div>
+</div>
+<div class="event-period"><span>イベント期間</span><strong id="m_eventPeriod">-</strong></div>
+</div>
+<div class="row"><label>現在日時</label><input id="m_nowDateTime" type="datetime-local"><span class="unit"></span></div>
+<div class="day-status">
+<div class="day-pill"><span>現在</span><strong id="mr_day">-</strong></div>
+<div class="day-pill"><span>経過日数</span><strong id="mr_elapsedDays">-</strong></div>
+<div class="day-pill"><span>残り日数</span><strong id="mr_daysLeft">-</strong></div>
+<div class="day-pill"><span>終了まで</span><strong id="mr_hoursLeft">-</strong></div>
+</div>
+<div class="row"><label>目標ポイント</label><input id="m_target" type="number" value="2200" min="0"><span class="unit">万pt</span></div>
+<div class="row"><label>現在ポイント</label><input id="m_current" type="number" min="0"><span class="unit">万pt</span></div>
+<div class="row"><label>参加パス所持数</label><input id="m_ownedPass" type="number" min="0"><span class="unit">枚</span></div>
+<div class="row"><label>通常ライブスコア</label><input id="m_normalScore" type="number" value="400" min="0"><span class="unit">万</span></div>
+<div class="row"><label>通常ライブ特効倍率</label><input id="m_normalBonus" type="number" placeholder="自動" min="0"><span class="unit">%</span></div>
+<div class="row"><label>イベント楽曲スコア</label><input id="m_eventScore" type="number" value="400" min="0"><span class="unit">万</span></div>
+<div class="row"><label>イベント楽曲特効倍率</label><input id="m_eventBonus" type="number" placeholder="自動" min="0"><span class="unit">%</span></div>
+<div class="row"><label>通常ライブの使用BP</label><select id="m_bp"><option>1</option><option>2</option><option>3</option><option>6</option><option selected>10</option></select><span class="unit">BP</span></div>
+<div class="row"><label>イベント楽曲のパス消費</label><select id="m_pass"><option>100</option><option>500</option><option selected>1000</option><option>2000</option></select><span class="unit">枚</span></div>
+</div>
+<div class="card"><h2>残りの計算結果</h2><div id="m_warn" class="warn"></div>
+<div class="result"><span>通常ライブプレイ回数</span><strong id="mr_plays">-</strong></div><div class="result"><span>目標までの使用BP</span><strong id="mr_bp">-</strong></div><div class="result"><span>終了までに自然回復するBP</span><strong id="mr_naturalBp">-</strong></div><div class="result highlight"><span>自然回復を引いた必要ダイヤ</span><strong id="mr_dia">-</strong></div><div class="result"><span>イベント楽曲プレイ回数</span><strong id="mr_eventPlays">-</strong></div><div class="result"><span>現時点からのプレイ時間</span><strong id="mr_time">-</strong></div><div class="result"><span>獲得ファン人数（1人あたり）</span><strong id="mr_fans">-</strong></div>
+</div></div></section>
+
+<section id="progress" class="panel"><div class="grid">
+<div class="card full"><h2>イベント進捗</h2>
+<div class="progress-linked-summary">
+<div class="day-pill"><span>イベント開始日</span><strong id="p_startLinked">-</strong></div>
+<div class="day-pill"><span>現在日時</span><strong id="p_nowLinked">-</strong></div>
+<div class="day-pill"><span>現在のイベント日</span><strong id="p_currentDay">-</strong></div>
+<div class="day-pill"><span>現在ポイント</span><strong id="p_currentLinked">-</strong></div>
+<div class="day-pill"><span>所持パス数</span><strong id="p_passLinked">-</strong></div>
+<div class="day-pill"><span>最終目標</span><strong id="p_targetLinked">-</strong></div>
+</div>
+<p class="note">開始日・現在日時・現在ポイント・所持パス数・最終目標は「途中経過」タブから自動反映します。過去の日の実績だけ表に入力できます。現在日の実績は途中経過の値が自動で入ります。</p>
+<div class="progress-table-wrap"><table class="progress-table" id="progressTable"><tbody></tbody></table></div>
+<div class="progress-summary">
+<div class="result"><span>イベント楽曲100パスあたり</span><strong id="p_eventPer100">-</strong></div>
+<div class="result"><span>最新のパス込みポイント</span><strong id="p_latest">-</strong></div>
+<div class="result highlight"><span>最終目標まで</span><strong id="p_toFinal">-</strong></div>
+</div>
+</div>
+<div class="card full"><h2>イベント進捗グラフ</h2><svg id="progressChart" class="progress-chart" viewBox="0 0 900 430" role="img" aria-label="イベント進捗グラフ"></svg><div class="chart-legend"><span class="legend-item"><i class="legend-line"></i>日別目標</span><span class="legend-item"><i class="legend-line actual"></i>パス込みポイント数</span></div></div>
+</div></section>
+
+<section id="bonus" class="panel active"><div class="grid">
+<div class="card bonus-card"><h2>通常ライブ編成</h2>
+<div id="normal_scouts"></div>
+<div class="bonus-total"><span>通常ライブ特効</span><strong id="b_normal">0%</strong></div>
+</div>
+<div class="card bonus-card"><h2>イベント楽曲編成</h2>
+<div class="same-bonus"><input id="same_event_bonus" type="checkbox"><label for="same_event_bonus">通常ライブと同じ特効を使用する</label></div>
+<div id="event_scouts"></div>
+<div class="bonus-total"><span>イベント楽曲特効</span><strong id="b_event">0%</strong></div>
+</div>
+<div class="card full"><p class="note">スカウトの種類を2つ選び、それぞれ所持しているカードの重なり枚数を入力してください。各スカウトの特効を合計し、通常ライブ・イベント楽曲の計算に自動反映します。</p></div>
+</div></section>
+</main>
+</div>
+<div id="tourApp" class="app-shell hidden">
+<header class="tour-header"><div class="wrap"><h1>ツアーイベント 必要ダイヤ・時間計算ツール</h1><p>1公演4曲（1〜3曲目＋FEVERがかかる4曲目）で計算します。</p><button class="mode-switch" type="button" onclick="backToMode()">イベント形式を選び直す</button></div></header>
+<main class="tour-main">
+<div class="tabs">
+  <button class="tab tour-tab active" data-tour-tab="tourBonus">特効倍率</button>
+  <button class="tab tour-tab" data-tour-tab="tourMid">途中経過</button>
+</div>
+<section id="tourBonus" class="panel tour-panel active"><div class="grid">
+  <div class="card bonus-card"><h2>ツアーライブ編成</h2>
+    <div id="tour_scouts"></div>
+    <div class="bonus-total"><span>ツアー特効</span><strong id="tb_total">0%</strong></div>
+  </div>
+  <div class="card full"><p class="note">スカウトの種類を2つ選び、それぞれ所持しているカードの重なり枚数を入力してください。合計した特効倍率を「途中経過」の計算に自動反映します。</p></div>
+</div></section>
+<section id="tourMid" class="panel tour-panel"><div class="grid">
+  <div class="card">
+    <h2>現在の状況</h2>
+    <div class="event-schedule">
+      <div class="event-type-options">
+        <label class="event-type-option"><input type="radio" name="t_eventType" value="mid" checked>15日開始</label>
+        <label class="event-type-option"><input type="radio" name="t_eventType" value="monthEnd">月末開始</label>
+      </div>
+      <div class="manual-toggle"><input id="t_manualSchedule" type="checkbox"><label for="t_manualSchedule">日程を手動変更</label></div>
+      <div id="t_manualDates" class="manual-dates">
+        <div class="row"><label>イベント開始日</label><input id="t_startDateTime" type="date"><span class="unit">15:00開始</span></div>
+        <div class="row"><label>イベント終了日</label><input id="t_endDateTime" type="date"><span class="unit">22:00終了</span></div>
+      </div>
+      <div class="event-period"><span>イベント期間</span><strong id="t_eventPeriod">-</strong></div>
+    </div>
+    <div class="row"><label>現在日時</label><input id="t_now" type="datetime-local"><span class="unit"></span></div>
+    <div class="day-status">
+      <div class="day-pill"><span>現在</span><strong id="tr_day">-</strong></div>
+      <div class="day-pill"><span>経過日数</span><strong id="tr_elapsedDays">-</strong></div>
+      <div class="day-pill"><span>残り日数</span><strong id="tr_daysLeft">-</strong></div>
+      <div class="day-pill"><span>終了まで</span><strong id="tr_hoursLeft">-</strong></div>
+    </div>
+    <div class="row"><label>目標ポイント</label><input id="t_target" type="number" value="350" min="0"><span class="unit">万pt</span></div>
+    <div class="row"><label>現在ポイント</label><input id="t_current" type="number" min="0"><span class="unit">万pt</span></div>
+  </div>
+  <div class="card">
+    <h2>ライブ設定</h2>
+    <div class="row"><label>1〜3曲目の平均スコア</label><input id="t_score13" type="number" value="400" min="0"><span class="unit">万</span></div>
+    <div class="row"><label>4曲目のスコア</label><input id="t_score4" type="number" value="450" min="0"><span class="unit">万</span></div>
+    <div class="row"><label>特効倍率</label><input id="t_bonus" type="number" placeholder="自動" min="0"><span class="unit">%</span></div>
+    <div class="row"><label>3曲目終了時のFEVER</label><input id="t_fever" type="number" value="100" min="0"><span class="unit">%</span></div>
+    <div class="row"><label>1〜3曲目の使用BP</label><select id="t_bp13"><option>1</option><option>2</option><option selected>3</option><option>6</option><option>10</option></select><span class="unit">BP</span></div>
+    <div class="row"><label>4曲目の使用BP</label><select id="t_bp4"><option>1</option><option>2</option><option>3</option><option>6</option><option selected>10</option></select><span class="unit">BP</span></div>
+    <p class="note">特効倍率が空欄の場合、「特効倍率」タブの結果を使います。</p>
+  </div>
+  <div class="card">
+    <h2>ダイヤ計算用（任意）</h2>
+    <div class="row"><label>所持ホイッスル</label><input id="t_whistle" type="number" min="0"><span class="unit">個</span></div>
+    <div class="row"><label>所持メガホン</label><input id="t_megaphone" type="number" min="0"><span class="unit">個</span></div>
+    <div class="row"><label>現在所有ダイヤ</label><input id="t_ownedDia" type="number" min="0"><span class="unit">個</span></div>
+    <div class="row"><label>1日に使える自然回復BP</label><input id="t_natural" type="number" value="40" min="0"><span class="unit">BP</span></div>
+  </div>
+  <div class="card">
+    <h2>残りの計算結果</h2><div id="t_warn" class="warn"></div>
+    <div class="tour-results">
+      <div class="result"><span>今後必要な公演回数</span><strong id="tr_tours">-</strong></div>
+      <div class="result"><span>ライブプレイ回数</span><strong id="tr_plays">-</strong></div>
+      <div class="result"><span>必要BP</span><strong id="tr_bp">-</strong></div>
+      <div class="result"><span>残りプレイ時間</span><strong id="tr_time">-</strong></div>
+      <div class="result"><span>終了までの自然回復BP</span><strong id="tr_natural">-</strong></div>
+      <div class="result"><span>今後のポイント報酬（BP換算）</span><strong id="tr_rewards">-</strong></div>
+      <div class="result highlight"><span>用意すべきダイヤ数</span><strong id="tr_dia">-</strong></div>
+      <div class="result"><span>獲得ファン人数（のべ）</span><strong id="tr_fans">-</strong></div>
+    </div>
+    <button class="reset" type="button" onclick="resetTour()">初期値に戻す</button>
+  </div>
+</div></section>
+</main>
+</div>
+<script>
+
+// Safariでは id 属性の要素が自動でグローバル変数にならない場合があるため、明示的に登録します。
+document.querySelectorAll('[id]').forEach(function(el){
+  if(typeof window[el.id] === 'undefined') window[el.id] = el;
+});
+function safeStorageGet(key){try{return window.localStorage.getItem(key)}catch(e){return null}}
+function safeStorageSet(key,value){try{window.localStorage.setItem(key,value)}catch(e){}}
+function safeStorageRemove(key){try{window.localStorage.removeItem(key)}catch(e){}}
+
+const rewardTableNew=[
+ [0.6,3,0,0],[1,0,0,10],[4,3,0,0],[9,3,0,0],[14,3,0,0],[16,0,0,10],[26,3,0,0],[34,0,0,10],[36,5,0,0],[40,0,0,10],[42,5,0,0],[48,0,0,10],[54,5,0,0],[64,0,0,15],[105,0,1,0],[120,0,0,15],[255,0,1,0],[300,0,1,0]
+];
+function selectMode(mode){
+  modeScreen.classList.add('hidden');
+  songApp.classList.toggle('hidden',mode!=='song');
+  tourApp.classList.toggle('hidden',mode!=='tour');
+  safeStorageSet('eventCalculatorMode',mode);
+  if(mode==='tour')calcTour();
+}
+function backToMode(){songApp.classList.add('hidden');tourApp.classList.add('hidden');modeScreen.classList.remove('hidden');safeStorageRemove('eventCalculatorMode');try{window.scrollTo({top:0,behavior:'smooth'})}catch(e){window.scrollTo(0,0)}}
+function futureRewardBp(current,target){
+  return rewardTableNew.reduce((sum,[pt,whistle,mega,dia])=>sum+(pt>current&&pt<=target?whistle+mega*10+dia/2:0),0);
+}
+function selectedTourEventType(){var e=document.querySelector('input[name="t_eventType"]:checked');return e?e.value:'mid'}
+function updateTourSchedule(){
+  const manual=t_manualSchedule.checked;
+  t_manualDates.classList.toggle('show',manual);
+  if(!manual){
+    const now=t_now.value?new Date(t_now.value):new Date();
+    const start=autoEventStart(now,selectedTourEventType());
+    const end=new Date(start);end.setDate(end.getDate()+8);
+    t_startDateTime.value=isoLocal(start);t_endDateTime.value=isoLocal(end);
+  }
+  t_eventPeriod.textContent=formatEventPeriod(t_startDateTime.value,t_endDateTime.value);
+}
+function calcTour(){
+  const target=val('t_target'),current=val('t_current'),score13=val('t_score13'),score4=val('t_score4');
+  const bp13=val('t_bp13'),bp4=val('t_bp4'),bonus=optional('t_bonus',calculatedTourBonus/100),fever=1+val('t_fever')/100;
+  const p13=(2500+score13*10000/5000)*(1+bonus);
+  const p4=(2250+score4*10000/5000)*(1+bonus)*fever;
+  const perTour=p13*3*bp13+p4*bp4;
+  const remaining=Math.max((target-current)*10000,0);
+  const tours=perTour>0?Math.ceil(remaining/perTour):0;
+  const totalBp=tours*(bp13*3+bp4);
+  const start=t_startDateTime.value?new Date(t_startDateTime.value+'T15:00:00'):new Date(NaN);
+  const end=t_endDateTime.value?new Date(t_endDateTime.value+'T22:00:00'):new Date(NaN);
+  const now=t_now.value?new Date(t_now.value):new Date();
+  let dayText='-',elapsedText='-',leftText='-',hoursText='-',naturalByTime=0;
+  if(!isNaN(start)&&!isNaN(end)&&!isNaN(now)){
+    const dayMs=86400000,startDay=new Date(start.getFullYear(),start.getMonth(),start.getDate()),nowDay=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+    const eventDay=Math.floor((nowDay-startDay)/dayMs)+1,totalDays=Math.floor((new Date(end.getFullYear(),end.getMonth(),end.getDate())-startDay)/dayMs)+1;
+    const clamped=Math.max(0,Math.min(totalDays,eventDay));
+    dayText=now<start?'開始前':now>end?'終了':`${clamped}日目 / ${totalDays}日`;
+    const elapsedHours=Math.max(0,(Math.min(now,end)-start)/3600000),hoursLeft=Math.max(0,(end-now)/3600000);
+    elapsedText=fmt(elapsedHours/24,1)+'日';leftText=fmt(hoursLeft/24,1)+'日';hoursText=fmt(hoursLeft,1)+'時間';
+    naturalByTime=Math.floor(hoursLeft*val('t_natural')/24);
+  }
+  tr_day.textContent=dayText;tr_elapsedDays.textContent=elapsedText;tr_daysLeft.textContent=leftText;tr_hoursLeft.textContent=hoursText;
+  const rewards=futureRewardBp(current,target),itemBp=val('t_whistle')+val('t_megaphone')*10;
+  const dia=Math.max(Math.ceil((totalBp-naturalByTime-rewards-itemBp)*2-val('t_ownedDia')),0);
+  tr_tours.textContent=fmt(tours)+'公演';tr_plays.textContent=fmt(tours*4)+'曲';tr_bp.textContent=fmt(totalBp)+'BP';tr_time.textContent=fmt(tours*12/60,1)+'時間';tr_natural.textContent=fmt(naturalByTime)+'BP';tr_rewards.textContent=fmt(rewards,1)+'BP';tr_dia.textContent=fmt(dia)+'個';tr_fans.textContent=fmt(tours*((fans[bp13]||0)*3+(fans[bp4]||0)))+'人';
+  let warn='';if(current>target)warn='現在ポイントが目標ポイントを上回っています。';else if(perTour<=0)warn='スコア・BP・特効倍率を確認してください。';else if(!isNaN(now)&&!isNaN(start)&&now<start)warn='現在日時がイベント開始前です。';else if(!isNaN(now)&&!isNaN(end)&&now>end)warn='現在日時がイベント終了後です。';showWarn('t_warn',warn);
+}
+function initTourDates(){const now=new Date();if(!t_now.value)t_now.value=isoLocalDateTime(now);updateTourSchedule()}
+function resetTour(){t_target.value=350;t_current.value='';t_score13.value=400;t_score4.value=450;t_bonus.value='';t_fever.value=100;t_bp13.value=3;t_bp4.value=10;t_whistle.value='';t_megaphone.value='';t_ownedDia.value='';t_natural.value=40;t_manualSchedule.checked=false;initTourDates();calcTour();}
+
+const bonusRates={
+  5:[0,20,50,75,100,150],
+  4:[0,5,15,25,35,50],
+  3:[0,1,2,3,4,5]
+};
+const scoutTypes={
+  basic:{label:'基本スカウト',cards:[['☆5',5],['☆4',4],['☆3',3]]},
+  shuffle:{label:'シャッフルスカウト',cards:[['☆5',5],['☆4',4]]},
+  fourTwo:{label:'☆4カード二種',cards:[['☆5',5],['☆4①',4],['☆4②',4],['☆3',3]]},
+  fiveTwo:{label:'☆5カード二種',cards:[['☆5①',5],['☆5②',5],['☆4①',4],['☆4②',4]]}
+};
+let calculatedTourBonus=0;
+function tourScoutMarkup(index){const id=`tour_scout_${index}`;return `<div class="scout"><div class="scout-title">スカウト${index}</div><select class="scout-select tour-scout-select" id="${id}_type" data-index="${index}">${Object.entries(scoutTypes).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('')}</select><div class="scout-fields" id="${id}_fields"></div></div>`}
+function renderTourScoutFields(index){const base=`tour_scout_${index}`,type=document.getElementById(`${base}_type`).value,box=document.getElementById(`${base}_fields`);box.innerHTML=scoutTypes[type].cards.map((card,n)=>`<div class="row"><label>${card[0]}カード</label><input class="tour-bonus-input" id="${base}_card_${n}" data-rarity="${card[1]}" type="number" value="0" min="0" max="5"><span class="unit">枚</span></div>`).join('');box.querySelectorAll('input').forEach(e=>e.addEventListener('input',calculateTourBonus))}
+function renderTourScouts(){tour_scouts.innerHTML=tourScoutMarkup(1)+tourScoutMarkup(2);[1,2].forEach(renderTourScoutFields);document.querySelectorAll('.tour-scout-select').forEach(e=>e.addEventListener('change',()=>{renderTourScoutFields(Number(e.dataset.index));calculateTourBonus()}))}
+function calculateTourBonus(){let total=0;document.querySelectorAll('#tour_scouts .tour-bonus-input').forEach(e=>{const count=clampBonusInput(e);total+=bonusRates[Number(e.dataset.rarity)][count]});calculatedTourBonus=total;tb_total.textContent=fmt(total,1)+'%';calcTour()}
+let calculatedBonus={normal:0,event:0};
+function val(id){return Number(document.getElementById(id).value)||0}
+function optional(id,fallback){const x=document.getElementById(id).value;return x===''?fallback:Number(x)/100}
+function floor(x){return Math.floor(x)}function ceil(x){return Math.ceil(x)}
+function fmt(x,d=0){return Number.isFinite(x)?x.toLocaleString('ja-JP',{maximumFractionDigits:d}):'-'}
+function showWarn(id,t){const e=document.getElementById(id);if(!e)return;e.textContent=t;e.style.display=t?'block':'none'}
+function scoutMarkup(group,index){
+  const id=`${group}_scout_${index}`;
+  return `<div class="scout"><div class="scout-title">スカウト${index}</div><select class="scout-select" id="${id}_type" data-group="${group}" data-index="${index}">${Object.entries(scoutTypes).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('')}</select><div class="scout-fields" id="${id}_fields"></div></div>`;
+}
+function renderScouts(){
+  ['normal','event'].forEach(group=>{
+    document.getElementById(`${group}_scouts`).innerHTML=scoutMarkup(group,1)+scoutMarkup(group,2);
+    [1,2].forEach(i=>renderScoutFields(group,i));
+  });
+  document.querySelectorAll('.scout-select').forEach(e=>e.addEventListener('change',()=>{renderScoutFields(e.dataset.group,e.dataset.index);calculateBonus()}));
+}
+function renderScoutFields(group,index){
+  const base=`${group}_scout_${index}`;
+  const type=document.getElementById(`${base}_type`).value;
+  const box=document.getElementById(`${base}_fields`);
+  box.innerHTML=scoutTypes[type].cards.map((card,n)=>`<div class="row"><label>${card[0]}カード</label><input class="bonus-input" id="${base}_card_${n}" data-rarity="${card[1]}" type="number" value="0" min="0" max="5"><span class="unit">枚</span></div>`).join('');
+  box.querySelectorAll('input').forEach(e=>e.addEventListener('input',calculateBonus));
+}
+function clampBonusInput(e){let n=Math.floor(Number(e.value)||0);n=Math.max(0,Math.min(5,n));e.value=n;return n}
+function groupBonus(group){
+  let total=0;
+  document.querySelectorAll(`#${group}_scouts .bonus-input`).forEach(e=>{const count=clampBonusInput(e);total+=bonusRates[Number(e.dataset.rarity)][count]});
+  return total;
+}
+function calculateBonus(){
+  const same=document.getElementById('same_event_bonus').checked;
+  calculatedBonus.normal=groupBonus('normal');
+  calculatedBonus.event=same?calculatedBonus.normal:groupBonus('event');
+  document.getElementById('event_scouts').classList.toggle('event-scouts-disabled',same);
+  document.getElementById('b_normal').textContent=fmt(calculatedBonus.normal,1)+'%';
+  document.getElementById('b_event').textContent=fmt(calculatedBonus.event,1)+'%';
+  calcStart();calcMid();if(document.getElementById('progressTable'))calcProgress();
+}
+function passPlays(total,selected){let remain=total,plays=0;for(const size of [2000,1000,500,100]){if(size>selected)continue;const n=floor(remain/size);plays+=n;remain-=n*size}return plays}
+const fans={1:10,2:16,3:20,6:30,10:40};
+function calcStart(){const target=val('s_target')*10000,ns=val('s_normalScore'),es=val('s_eventScore'),bp=val('s_bp');const nb=optional('s_normalBonus',calculatedBonus.normal/100),eb=optional('s_eventBonus',calculatedBonus.event/100);const normalBase=2000+floor(ns*10000*.0002),eventBase=10000+floor(es*10000*.0002);const combined10=normalBase*(1+nb)*10+eventBase*(1+eb);const perBp=floor(combined10/10);const pointsPerPlay=perBp*bp;const plays=pointsPerPlay>0?ceil(target/pointsPerPlay):0;const totalBp=plays*bp;const totalPass=totalBp*10;const eplays=passPlays(totalPass,val('s_pass'));const noBonusPerBp=(normalBase*10+eventBase)/10;const noBonusPlays=noBonusPerBp>0?ceil(target/(noBonusPerBp*bp)):0;const dia=totalBp*2-val('s_natural')*2*8-val('s_whistle')*2-val('s_rewardDia')-val('s_ownedDia');const gacha=Math.max(floor(((noBonusPlays*bp-totalBp)*2)/35),0);r_plays.textContent=fmt(plays)+'回';r_normalTime.textContent=fmt(plays*3/60,1)+'時間';r_eventPlays.textContent=fmt(eplays)+'回';r_totalTime.textContent=fmt((plays+eplays)*3/60,1)+'時間';r_bp.textContent=fmt(totalBp)+'BP';r_dia.textContent=fmt(Math.max(dia,0))+'個';r_gacha.textContent=fmt(gacha)+'連まで';r_fans.textContent=fmt(plays*(fans[bp]||0))+'人';showWarn('s_warn',pointsPerPlay<=0?'入力値を確認してください。':'')}
+function calcMid(){
+  const target=(val('m_target')-val('m_current'))*10000,owned=val('m_ownedPass'),ns=val('m_normalScore'),es=val('m_eventScore'),bp=val('m_bp');
+  const nb=optional('m_normalBonus',calculatedBonus.normal/100),eb=optional('m_eventBonus',calculatedBonus.event/100);
+  const normalBase=2000+floor(ns*10000*.0002),eventBase=10000+floor(es*10000*.0002),normal=normalBase*(1+nb),event=eventBase*(1+eb);
+  const remaining=target-floor(owned/100)*event;
+  const perBp=floor((normal*10+event)/10);
+  const plays=remaining>0&&perBp>0?ceil(remaining/(perBp*bp)):0;
+  const usedBp=plays*bp,totalPass=owned+usedBp*10,eplays=passPlays(totalPass,val('m_pass'));
+  const startDt=m_startDateTime.value?new Date(m_startDateTime.value+'T15:00:00'):new Date(NaN),endDt=m_endDateTime.value?new Date(m_endDateTime.value+'T22:00:00'):new Date(NaN),nowDt=new Date(m_nowDateTime.value);
+  let dayText='-',elapsedText='-',leftText='-',hoursText='-',naturalBp=0;
+  if(!isNaN(startDt)&&!isNaN(endDt)&&!isNaN(nowDt)){
+    const dayMs=86400000;
+    const startDay=new Date(startDt.getFullYear(),startDt.getMonth(),startDt.getDate());
+    const nowDay=new Date(nowDt.getFullYear(),nowDt.getMonth(),nowDt.getDate());
+    const eventDay=Math.floor((nowDay-startDay)/dayMs)+1;
+    const totalDays=Math.floor((new Date(endDt.getFullYear(),endDt.getMonth(),endDt.getDate())-startDay)/dayMs)+1;
+    const clampedDay=Math.max(0,Math.min(totalDays,eventDay));
+    dayText=nowDt<startDt?'開始前':nowDt>endDt?'終了':`${clampedDay}日目 / ${totalDays}日`;
+    const elapsedHours=Math.max(0,(Math.min(nowDt,endDt)-startDt)/3600000);
+    const hoursLeft=Math.max(0,(endDt-nowDt)/3600000);
+    elapsedText=fmt(elapsedHours/24,1)+'日';
+    leftText=fmt(hoursLeft/24,1)+'日';
+    hoursText=fmt(hoursLeft,1)+'時間';
+    naturalBp=Math.floor(hoursLeft*2); // BPは30分で1回復
+  }
+  mr_day.textContent=dayText;mr_elapsedDays.textContent=elapsedText;mr_daysLeft.textContent=leftText;mr_hoursLeft.textContent=hoursText;
+  mr_plays.textContent=fmt(plays)+'回';mr_bp.textContent=fmt(usedBp)+'BP';mr_naturalBp.textContent=fmt(naturalBp)+'BP';
+  mr_dia.textContent=fmt(Math.max((usedBp-naturalBp)*2,0))+'個';mr_eventPlays.textContent=fmt(eplays)+'回';mr_time.textContent=fmt((plays+eplays)*3/60,1)+'時間';mr_fans.textContent=fmt(plays*(fans[bp]||0))+'人';
+  let warn='';if(val('m_current')>val('m_target'))warn='現在ポイントが目標を上回っています。';else if(!isNaN(nowDt)&&!isNaN(startDt)&&nowDt<startDt)warn='現在日時がイベント開始前です。';else if(!isNaN(nowDt)&&!isNaN(endDt)&&nowDt>endDt)warn='現在日時がイベント終了後です。';showWarn('m_warn',warn)
+}
+
+function isoLocal(d){const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${day}`}
+function isoLocalDateTime(d){const h=String(d.getHours()).padStart(2,'0'),mi=String(d.getMinutes()).padStart(2,'0');return isoLocal(d)+'T'+h+':'+mi}
+function shortDate(d){return `${d.getMonth()+1}/${d.getDate()}`}
+function initProgress(){
+  const rows=['日付','日別目標','ポイント数','所持パス数','パス込みポイント数','日別目標まで','最終目標まで'];
+  progressTable.querySelector('tbody').innerHTML=rows.map((name,r)=>`<tr><td>${name}</td>${Array.from({length:9},(_,i)=>{if(r===0)return `<td class="derived" id="p_date_${i}"></td>`;if(r===1)return `<td class="derived" id="p_goal_${i}"></td>`;if(r===2)return `<td><input id="p_point_${i}" type="number" min="0" step="1"></td>`;if(r===3)return `<td><input id="p_pass_${i}" type="number" min="0" step="1"></td>`;return `<td class="derived" id="p_calc_${r}_${i}">-</td>`}).join('')}</tr>`).join('');
+  progressTable.querySelectorAll('input').forEach(e=>e.addEventListener('input',calcProgress));
+  calcProgress();
+}
+function calcProgress(){
+  const startValue=m_startDateTime.value||isoLocal(new Date());
+  const nowValue=m_nowDateTime.value||isoLocalDateTime(new Date());
+  const start=new Date(startValue+'T00:00:00');
+  const now=new Date(nowValue);
+  const currentIndex=Math.floor((new Date(now.getFullYear(),now.getMonth(),now.getDate())-start)/86400000);
+  p_currentDay.textContent=currentIndex<0?'開始前':currentIndex>8?'終了':`${currentIndex+1}日目 / 9日`;
+  p_startLinked.textContent=startValue.replace(/-/g,'/');
+  p_nowLinked.textContent=nowValue.replace('T',' ').replace(/-/g,'/');
+  p_currentLinked.textContent=fmt(val('m_current'))+'万pt';
+  p_passLinked.textContent=fmt(val('m_ownedPass'))+'枚';
+  p_targetLinked.textContent=fmt(val('m_target'))+'万pt';
+  const target=val('m_target');
+  const es=val('m_eventScore');
+  const eb=optional('m_eventBonus',calculatedBonus.event/100);
+  const eventPer100=(10000+floor(es*10000*.0002))*(1+eb)/10000;
+  p_eventPer100.textContent=fmt(eventPer100,2)+'万pt';
+  const goals=[],actuals=[],dates=[];let latest=null;
+  for(let i=0;i<9;i++){
+    const d=new Date(start);d.setDate(start.getDate()+i);dates.push(shortDate(d));
+    const goal=target*(i+1)/9;goals.push(goal);
+    const dateCell=document.getElementById(`p_date_${i}`);dateCell.textContent=`${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()}`;dateCell.classList.toggle('current-day',i===currentIndex);
+    document.getElementById(`p_goal_${i}`).textContent=fmt(Math.floor(goal));
+    const pointEl=document.getElementById(`p_point_${i}`),passEl=document.getElementById(`p_pass_${i}`);
+    pointEl.readOnly=false;passEl.readOnly=false;pointEl.classList.remove('current-day');passEl.classList.remove('current-day');
+    if(i===currentIndex){
+      pointEl.value=val('m_current');passEl.value=val('m_ownedPass');
+      pointEl.readOnly=true;passEl.readOnly=true;pointEl.classList.add('current-day');passEl.classList.add('current-day');
+    }
+    const hasPoint=pointEl.value!=='';
+    if(hasPoint){
+      const actual=val(`p_point_${i}`)+Math.floor(val(`p_pass_${i}`)/100)*eventPer100;
+      actuals.push(actual);latest=actual;
+      document.getElementById(`p_calc_4_${i}`).textContent=fmt(Math.floor(actual));
+      const daily=actual-goal,final=actual-target;
+      document.getElementById(`p_calc_5_${i}`).textContent=(daily>=0?'+':'')+fmt(Math.floor(daily));
+      document.getElementById(`p_calc_6_${i}`).textContent=(final>=0?'+':'')+fmt(Math.floor(final));
+    }else{
+      actuals.push(null);
+      [4,5,6].forEach(r=>document.getElementById(`p_calc_${r}_${i}`).textContent='-');
+    }
+  }
+  p_latest.textContent=latest===null?'-':fmt(Math.floor(latest))+'万pt';
+  p_toFinal.textContent=latest===null?'-':(latest-target>=0?'+':'')+fmt(Math.floor(latest-target))+'万pt';
+  drawProgressChart(dates,goals,actuals,target);
+}
+function drawProgressChart(labels,goals,actuals,target){
+  const svg=progressChart,W=900,H=430,pad={l:70,r:26,t:28,b:58};
+  const vals=goals.concat(actuals.filter(v=>v!==null));const max=Math.max(target,...vals,1)*1.12;
+  const x=i=>pad.l+i*(W-pad.l-pad.r)/(labels.length-1);const y=v=>H-pad.b-v*(H-pad.t-pad.b)/max;
+  const ticks=5;let out=`<rect width="${W}" height="${H}" fill="white" rx="10"/>`;
+  for(let i=0;i<=ticks;i++){const v=max*i/ticks,yy=y(v);out+=`<line x1="${pad.l}" y1="${yy}" x2="${W-pad.r}" y2="${yy}" stroke="#e5e7ef"/><text x="${pad.l-10}" y="${yy+4}" text-anchor="end" font-size="12" fill="#6d7285">${Math.round(v).toLocaleString('ja-JP')}</text>`}
+  labels.forEach((lab,i)=>out+=`<text x="${x(i)}" y="${H-pad.b+28}" text-anchor="middle" font-size="12" fill="#6d7285">${lab}</text>`);
+  const path=(arr)=>arr.map((v,i)=>(i?'L':'M')+x(i)+','+y(v)).join(' ');
+  out+=`<path d="${path(goals)}" fill="none" stroke="#5d9df6" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>`;
+  goals.forEach((v,i)=>out+=`<circle cx="${x(i)}" cy="${y(v)}" r="5" fill="#5d9df6"/><text x="${x(i)}" y="${y(v)-11}" text-anchor="middle" font-size="11" fill="#485063">${Math.floor(v).toLocaleString('ja-JP')}</text>`);
+  let segments=[],seg=[];actuals.forEach((v,i)=>{if(v===null){if(seg.length)segments.push(seg);seg=[]}else seg.push([i,v])});if(seg.length)segments.push(seg);
+  segments.forEach(a=>{if(a.length>1)out+=`<path d="${a.map(([i,v],n)=>(n?'L':'M')+x(i)+','+y(v)).join(' ')}" fill="none" stroke="#ef7777" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>`;a.forEach(([i,v])=>out+=`<circle cx="${x(i)}" cy="${y(v)}" r="5" fill="#ef7777"/><text x="${x(i)}" y="${y(v)-11}" text-anchor="middle" font-size="11" fill="#8a4141">${Math.floor(v).toLocaleString('ja-JP')}</text>`) });
+  svg.innerHTML=out;
+}
+
+
+function selectedEventType(){var e=document.querySelector('input[name="m_eventType"]:checked');return e?e.value:'mid'}
+function autoEventStart(now,type){
+  const y=now.getFullYear(),m=now.getMonth(),day=now.getDate();
+  if(type==='mid'){
+    return day>=15?new Date(y,m,15):new Date(y,m-1,15);
+  }
+  return day<=9?new Date(y,m,0):new Date(y,m+1,0);
+}
+function formatEventPeriod(startValue,endValue){
+  if(!startValue||!endValue)return '-';
+  const s=new Date(startValue+'T15:00:00'),e=new Date(endValue+'T22:00:00');
+  if(isNaN(s)||isNaN(e))return '-';
+  return `${s.getFullYear()}/${s.getMonth()+1}/${s.getDate()} 15:00 ～ ${e.getFullYear()}/${e.getMonth()+1}/${e.getDate()} 22:00`;
+}
+function updateEventSchedule(){
+  const manual=m_manualSchedule.checked;
+  m_manualDates.classList.toggle('show',manual);
+  if(!manual){
+    const now=m_nowDateTime.value?new Date(m_nowDateTime.value):new Date();
+    const start=autoEventStart(now,selectedEventType());
+    const end=new Date(start);end.setDate(end.getDate()+8);
+    m_startDateTime.value=isoLocal(start);
+    m_endDateTime.value=isoLocal(end);
+  }
+  m_eventPeriod.textContent=formatEventPeriod(m_startDateTime.value,m_endDateTime.value);
+}
+function initMidDates(){
+  const now=new Date();
+  if(!m_nowDateTime.value)m_nowDateTime.value=isoLocalDateTime(now);
+  updateEventSchedule();
+}
+
+function resetStart(){['s_target','s_normalScore','s_eventScore','s_natural'].forEach((id,i)=>document.getElementById(id).value=[2200,400,400,40][i]);['s_normalBonus','s_eventBonus','s_whistle','s_rewardDia','s_ownedDia'].forEach(id=>document.getElementById(id).value='');s_bp.value=6;s_pass.value=1000;calcStart()}
+document.querySelectorAll('#start input,#start select,#mid input,#mid select').forEach(e=>e.addEventListener('input',()=>{if(e.id==='m_nowDateTime'&&!m_manualSchedule.checked)updateEventSchedule();else if(e.id==='m_startDateTime'||e.id==='m_endDateTime')m_eventPeriod.textContent=formatEventPeriod(m_startDateTime.value,m_endDateTime.value);calcStart();calcMid();calcProgress()}));
+document.querySelectorAll('input[name="m_eventType"]').forEach(e=>e.addEventListener('change',()=>{updateEventSchedule();calcMid();calcProgress()}));
+m_manualSchedule.addEventListener('change',()=>{updateEventSchedule();calcMid();calcProgress()});
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab,.panel').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(b.dataset.tab).classList.add('active')});
+renderScouts();
+initMidDates();
+document.getElementById('same_event_bonus').addEventListener('change',calculateBonus);
+initProgress();
+calculateBonus();
+renderTourScouts();
+initTourDates();
+calculateTourBonus();
+document.querySelectorAll('.tour-tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tour-tab,.tour-panel').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(b.dataset.tourTab).classList.add('active')});
+document.querySelectorAll('#tourMid input,#tourMid select').forEach(e=>e.addEventListener('input',()=>{if(e.id==='t_now'&&!t_manualSchedule.checked)updateTourSchedule();else if(e.id==='t_startDateTime'||e.id==='t_endDateTime')t_eventPeriod.textContent=formatEventPeriod(t_startDateTime.value,t_endDateTime.value);calcTour()}));
+document.querySelectorAll('input[name="t_eventType"]').forEach(e=>e.addEventListener('change',()=>{updateTourSchedule();calcTour()}));
+t_manualSchedule.addEventListener('change',()=>{updateTourSchedule();calcTour()});
+
+function syncOptionCheckedStyles(){
+  document.querySelectorAll('.event-type-option').forEach(function(label){
+    var input=label.querySelector('input');
+    label.classList.toggle('checked',!!(input&&input.checked));
+  });
+}
+document.addEventListener('change',function(e){
+  if(e.target&&e.target.matches('input[type=radio],input[type=checkbox]')) syncOptionCheckedStyles();
+});
+syncOptionCheckedStyles();
+
+const savedMode=safeStorageGet('eventCalculatorMode');
+if(savedMode==='song'||savedMode==='tour')selectMode(savedMode);
+</script>
+</body></html>
