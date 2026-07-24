@@ -9,10 +9,10 @@
 *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif;line-height:1.55}
 header{background:linear-gradient(135deg,#5967e8,#8c66da);color:#fff;padding:28px 18px} header .wrap{max-width:1050px;margin:auto} h1{font-size:clamp(22px,4vw,34px);margin:0 0 6px} header p{margin:0;opacity:.9}
 main{max-width:1050px;margin:22px auto 60px;padding:0 14px}.tabs{display:flex;gap:8px;overflow:auto;padding-bottom:8px;position:sticky;top:0;background:var(--bg);z-index:5}.tab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:10px 16px;white-space:nowrap;font-weight:700;cursor:pointer}.tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
-.panel{display:none}.panel.active{display:block}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 4px 16px rgba(35,40,90,.05)}.card.full{grid-column:1/-1} h2{font-size:19px;margin:0 0 14px} h3{font-size:16px;margin:18px 0 8px}.row{display:grid;grid-template-columns:minmax(160px,1fr) minmax(120px,180px) 58px;gap:8px;align-items:center;margin:9px 0}.row label{font-size:14px}.unit{font-size:13px;color:var(--muted)}input,select{width:100%;border:1px solid #cdd1df;border-radius:10px;padding:10px;font:inherit;background:var(--input)}input[type=checkbox],input[type=radio]{width:auto;min-width:0;flex:0 0 auto;accent-color:var(--accent)}.result{background:var(--result);border:1px solid #cfe4f7;border-radius:12px;padding:11px 13px;display:flex;justify-content:space-between;gap:10px;margin:8px 0}.result strong{font-size:18px}.result.highlight{background:var(--green);border-color:#ccebd7}.bonus-card{background:linear-gradient(180deg,#fff,#f7f7ff);border:2px solid #dfe2ff}.bonus-card h2{display:flex;align-items:center;gap:8px}.bonus-total{margin-top:16px;padding:16px;border-radius:16px;background:linear-gradient(135deg,#5967e8,#8c66da);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:12px}.bonus-total span{font-weight:700}.bonus-total strong{font-size:30px;line-height:1}.same-bonus{display:flex;align-items:center;gap:8px;margin:0 0 12px;padding:11px 12px;border-radius:12px;background:#f2f3ff;font-weight:700}.same-bonus label{cursor:pointer}.event-scouts-disabled{opacity:.45;pointer-events:none}.note{font-size:13px;color:var(--muted)}.warn{background:var(--danger);border:1px solid #f4caca;border-radius:10px;padding:10px;color:#a33;display:none}.scout{border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:12px;background:#fff}.scout-title{font-weight:800;margin-bottom:10px}.scout-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.scout-fields .row{grid-template-columns:minmax(120px,1fr) minmax(90px,130px) 42px;margin:0}.scout-select{margin-bottom:12px}.cards-grid{display:grid;grid-template-columns:1fr repeat(5,70px);gap:6px;align-items:center}.cards-grid span{font-size:13px}.cards-grid input,.cards-grid select{padding:8px;text-align:center}.tiny{font-size:12px;color:var(--muted)}button.reset{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 14px;cursor:pointer;margin-top:12px}@media(max-width:760px){.grid{grid-template-columns:1fr}.row{grid-template-columns:1fr minmax(105px,145px) 48px}.cards-grid{grid-template-columns:1fr repeat(5,45px)}.card{padding:14px}}
+.panel{display:none}.panel.active{display:block}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 4px 16px rgba(35,40,90,.05)}.card.full{grid-column:1/-1} h2{font-size:19px;margin:0 0 14px} h3{font-size:16px;margin:18px 0 8px}.row{display:grid;grid-template-columns:minmax(160px,1fr) minmax(120px,180px) 58px;gap:8px;align-items:center;margin:9px 0}.row label{font-size:14px}.unit{font-size:13px;color:var(--muted)}input,select{width:100%;border:1px solid #cdd1df;border-radius:10px;padding:10px;font:inherit;background:var(--input)}input[readonly]{background:#eef0f6;color:var(--text)}input[type=checkbox],input[type=radio]{width:auto;min-width:0;flex:0 0 auto;accent-color:var(--accent)}.result{background:var(--result);border:1px solid #cfe4f7;border-radius:12px;padding:11px 13px;display:flex;justify-content:space-between;gap:10px;margin:8px 0}.result strong{font-size:18px}.result.highlight{background:var(--green);border-color:#ccebd7}.bonus-card{background:linear-gradient(180deg,#fff,#f7f7ff);border:2px solid #dfe2ff}.bonus-card h2{display:flex;align-items:center;gap:8px}.bonus-total{margin-top:16px;padding:16px;border-radius:16px;background:linear-gradient(135deg,#5967e8,#8c66da);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:12px}.bonus-total span{font-weight:700}.bonus-total strong{font-size:30px;line-height:1}.same-bonus{display:flex;align-items:center;gap:8px;margin:0 0 12px;padding:11px 12px;border-radius:12px;background:#f2f3ff;font-weight:700}.same-bonus label{cursor:pointer}.event-scouts-disabled{opacity:.45;pointer-events:none}.note{font-size:13px;color:var(--muted)}.warn{background:var(--danger);border:1px solid #f4caca;border-radius:10px;padding:10px;color:#a33;display:none}.scout{border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:12px;background:#fff}.scout-title{font-weight:800;margin-bottom:10px}.scout-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.scout-fields .row{grid-template-columns:minmax(120px,1fr) minmax(90px,130px) 42px;margin:0}.scout-select{margin-bottom:12px}.cards-grid{display:grid;grid-template-columns:1fr repeat(5,70px);gap:6px;align-items:center}.cards-grid span{font-size:13px}.cards-grid input,.cards-grid select{padding:8px;text-align:center}.tiny{font-size:12px;color:var(--muted)}button.reset{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 14px;cursor:pointer;margin-top:12px}@media(max-width:760px){.grid{grid-template-columns:1fr}.row{grid-template-columns:1fr minmax(105px,145px) 48px}.cards-grid{grid-template-columns:1fr repeat(5,45px)}.card{padding:14px}}
 
 .event-schedule{background:#f7f7ff;border:1px solid #dfe2ff;border-radius:14px;padding:14px;margin-bottom:14px}.event-type-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.event-type-option{display:flex;align-items:center;gap:9px;border:1px solid #d8dbea;border-radius:12px;padding:12px;background:#fff;font-weight:700;cursor:pointer}.event-type-option:has(input:checked),.event-type-option.checked{border-color:var(--accent);background:var(--accent2);color:#3f49b9}.manual-toggle{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:13px;color:var(--muted)}.manual-toggle label{cursor:pointer}.manual-dates{display:none;margin-top:10px}.manual-dates.show{display:block}.event-period{margin-top:12px;padding:11px 12px;border-radius:12px;background:#fff;border:1px solid var(--line);font-size:14px}.event-period strong{display:block;font-size:16px;margin-top:2px}.event-period .error{color:#a33}
-.day-status{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:12px 0 4px}.day-pill{background:#f2f3ff;border:1px solid #dfe2ff;border-radius:14px;padding:12px;text-align:center}.day-pill span{display:block;font-size:12px;color:var(--muted)}.day-pill strong{display:block;font-size:20px;margin-top:3px}.current-day{background:#fff8cc!important}.progress-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:16px}.progress-linked-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:16px}.progress-table-wrap{overflow-x:auto}.progress-table{border-collapse:separate;border-spacing:0;min-width:980px;width:100%;font-size:13px}.progress-table th,.progress-table td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:8px;text-align:center;white-space:nowrap}.progress-table th:first-child,.progress-table td:first-child{position:sticky;left:0;background:#fff;z-index:2;text-align:left;font-weight:700;border-left:1px solid var(--line)}.progress-table tr:first-child th{border-top:1px solid var(--line)}.progress-table input{min-width:82px;padding:8px;text-align:right}.progress-table .derived{background:#f6f7fb}.progress-chart{width:100%;height:auto;min-height:320px;display:block}.chart-legend{display:flex;justify-content:center;gap:22px;margin-top:10px;font-size:13px}.legend-item{display:flex;align-items:center;gap:7px}.legend-line{width:24px;height:3px;border-radius:99px;background:#5d9df6}.legend-line.actual{background:#ef7777}.progress-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}@media(max-width:760px){.progress-controls,.progress-summary,.day-status,.progress-linked-summary{grid-template-columns:1fr 1fr}}
+.day-status{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:12px 0 4px}.day-pill{background:#f2f3ff;border:1px solid #dfe2ff;border-radius:14px;padding:12px;text-align:center}.day-pill span{display:block;font-size:12px;color:var(--muted)}.day-pill strong{display:block;font-size:20px;margin-top:3px}.current-day{background:#fff8cc!important}.progress-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:16px}.progress-linked-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:16px}.progress-days{display:flex;flex-direction:column;gap:12px}.progress-day{border:1px solid var(--line);border-radius:16px;padding:14px;background:#fff}.progress-day.is-current{border-color:#e0c84a;background:#fffdf2;box-shadow:0 0 0 1px #f0e08a}.progress-day.is-future{opacity:.72}.progress-day-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.progress-day-head .day-title{font-size:16px;font-weight:800}.progress-day-head .day-date{font-size:13px;color:var(--muted)}.progress-day-badge{font-size:11px;font-weight:800;color:#8a6d00;background:#fff3bf;border-radius:999px;padding:4px 10px}.progress-day-goal{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;margin-bottom:10px;border-radius:10px;background:#f6f7fb;font-size:13px;color:var(--muted)}.progress-day-goal strong{font-size:16px;color:var(--text)}.progress-day .row{margin:8px 0}.progress-day-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}.progress-day-stat{background:#eef6ff;border:1px solid #d7e8f8;border-radius:12px;padding:10px 8px;text-align:center}.progress-day-stat span{display:block;font-size:11px;color:var(--muted);line-height:1.3}.progress-day-stat strong{display:block;font-size:15px;margin-top:4px}.progress-day-stat.ok strong{color:#2f7a4a}.progress-day-stat.ng strong{color:#b33}.progress-chart{width:100%;height:auto;min-height:320px;display:block}.chart-legend{display:flex;justify-content:center;gap:22px;margin-top:10px;font-size:13px}.legend-item{display:flex;align-items:center;gap:7px}.legend-line{width:24px;height:3px;border-radius:99px;background:#5d9df6}.legend-line.actual{background:#ef7777}.progress-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}@media(max-width:760px){.progress-controls,.progress-summary,.day-status,.progress-linked-summary{grid-template-columns:1fr 1fr}.progress-day-stats{grid-template-columns:1fr;gap:6px}.progress-day-stat{display:flex;justify-content:space-between;align-items:center;text-align:left;padding:10px 12px}.progress-day-stat strong{margin-top:0;font-size:16px}}
 
 .mode-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px;background:linear-gradient(135deg,#eef0ff,#f8f1ff)}
 .mode-box{width:min(760px,100%);background:#fff;border:1px solid var(--line);border-radius:24px;padding:26px;box-shadow:0 14px 40px rgba(35,40,90,.12);text-align:center}.mode-box h1{color:var(--text);font-size:clamp(24px,5vw,36px);margin:0 0 8px}.mode-box p{color:var(--muted);margin:0 0 22px}.mode-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.mode-card{border:2px solid #dfe2ff;background:#fff;border-radius:18px;padding:22px 16px;cursor:pointer;text-align:left;transition:.18s}.mode-card:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:0 8px 22px rgba(87,101,232,.14)}.mode-card strong{display:block;font-size:21px;margin-bottom:6px}.mode-card span{display:block;color:var(--muted);font-size:14px}.mode-card.tour{border-color:#d3eadb}.mode-card.tour:hover{border-color:#43a76b}.app-shell.hidden,.mode-screen.hidden{display:none}.mode-switch{border:1px solid rgba(255,255,255,.5);background:rgba(255,255,255,.15);color:#fff;border-radius:999px;padding:8px 13px;cursor:pointer;margin-top:12px}.tour-header{background:linear-gradient(135deg,#398e5b,#68b67f)}.tour-main{max-width:1050px;margin:22px auto 60px;padding:0 14px}.tour-note{background:#f0faf4;border:1px solid #cde9d7;border-radius:12px;padding:11px 13px;font-size:13px;color:#38634a;margin-bottom:14px}.tour-results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.tour-results .result{margin:0}.subtle-heading{font-size:14px;color:var(--muted);font-weight:700;margin:16px 0 5px}@media(max-width:760px){.mode-cards,.tour-results{grid-template-columns:1fr}}
@@ -64,6 +64,14 @@ button,input,select{touch-action:manipulation}
   .mode-switch,.reset{min-height:44px;font-size:14px}
   .progress-table-wrap{-webkit-overflow-scrolling:touch}
   .progress-chart{min-height:240px}
+  .progress-linked-summary{gap:8px;margin-bottom:12px}
+  .progress-linked-summary .day-pill{padding:10px 8px}
+  .progress-linked-summary .day-pill strong{font-size:14px;overflow-wrap:anywhere}
+  .progress-days{gap:10px}
+  .progress-day{padding:12px}
+  .progress-day .row input{font-size:16px;min-height:44px}
+  .progress-summary{grid-template-columns:1fr;gap:8px;margin-top:12px}
+  .chart-legend{gap:14px;font-size:12px;flex-wrap:wrap}
 }
 
 </style>
@@ -99,7 +107,7 @@ button,input,select{touch-action:manipulation}
 <div class="row"><label>イベント楽曲特効倍率</label><input id="s_eventBonus" type="number" placeholder="自動" min="0"><span class="unit">%</span></div>
 <div class="row"><label>通常ライブの使用BP</label><select id="s_bp"><option>1</option><option>2</option><option>3</option><option selected>6</option><option>10</option></select><span class="unit">BP</span></div>
 <div class="row"><label>イベント楽曲のパス消費</label><select id="s_pass"><option>100</option><option>500</option><option selected>1000</option><option>2000</option></select><span class="unit">枚</span></div>
-<p class="note">特効倍率が空欄の場合、「特効倍率」タブの結果を使います。</p></div>
+<p class="note">選択した枚数で割った回数がイベント楽曲プレイ回数になります。特効倍率が空欄の場合、「特効倍率」タブの結果を使います。</p></div>
 <div class="card"><h2>ダイヤ計算用（任意）</h2>
 <div class="row"><label>獲得予定ホイッスル</label><input id="s_whistle" type="number" value="0" min="0"><span class="unit">個</span></div>
 <div class="row"><label>獲得予定ダイヤ</label><input id="s_rewardDia" type="number" value="0" min="0"><span class="unit">個</span></div>
@@ -127,7 +135,7 @@ button,input,select{touch-action:manipulation}
 </div>
 <div class="event-period"><span>イベント期間</span><strong id="m_eventPeriod">-</strong></div>
 </div>
-<div class="row"><label>現在日時</label><input id="m_nowDateTime" type="datetime-local"><span class="unit"></span></div>
+<div class="row"><label>現在日時</label><input id="m_nowDateTime" type="datetime-local" readonly><span class="unit">自動更新</span></div>
 <div class="day-status">
 <div class="day-pill"><span>現在</span><strong id="mr_day">-</strong></div>
 <div class="day-pill"><span>経過日数</span><strong id="mr_elapsedDays">-</strong></div>
@@ -182,8 +190,8 @@ button,input,select{touch-action:manipulation}
 <div class="day-pill"><span>所持パス数</span><strong id="p_passLinked">-</strong></div>
 <div class="day-pill"><span>最終目標</span><strong id="p_targetLinked">-</strong></div>
 </div>
-<p class="note">開始日・現在日時・現在ポイント・所持パス数・最終目標は「途中経過」タブから自動反映します。過去の日の実績だけ表に入力できます。現在日の実績は途中経過の値が自動で入ります。</p>
-<div class="progress-table-wrap"><table class="progress-table" id="progressTable"><tbody></tbody></table></div>
+<p class="note">開始日・現在日時・現在ポイント・所持パス数・最終目標は「途中経過」から自動反映します。過去日だけ入力できます。当日は途中経過の値が入ります。</p>
+<div id="progressDays" class="progress-days"></div>
 <div class="progress-summary">
 <div class="result"><span>イベント楽曲100パスあたり</span><strong id="p_eventPer100">-</strong></div>
 <div class="result"><span>最新のパス込みポイント</span><strong id="p_latest">-</strong></div>
@@ -236,7 +244,7 @@ button,input,select{touch-action:manipulation}
       </div>
       <div class="event-period"><span>イベント期間</span><strong id="t_eventPeriod">-</strong></div>
     </div>
-    <div class="row"><label>現在日時</label><input id="t_now" type="datetime-local"><span class="unit"></span></div>
+    <div class="row"><label>現在日時</label><input id="t_now" type="datetime-local" readonly><span class="unit">自動更新</span></div>
     <div class="day-status">
       <div class="day-pill"><span>現在</span><strong id="tr_day">-</strong></div>
       <div class="day-pill"><span>経過日数</span><strong id="tr_elapsedDays">-</strong></div>
@@ -302,6 +310,129 @@ function safeStorageGet(key){try{return window.localStorage.getItem(key)}catch(e
 function safeStorageSet(key,value){try{window.localStorage.setItem(key,value)}catch(e){}}
 function safeStorageRemove(key){try{window.localStorage.removeItem(key)}catch(e){}}
 
+const STATE_KEY='eventCalculatorState_v2';
+const LIVE_SKIP_IDS={m_nowDateTime:1,t_now:1};
+let saveTimer=null,restoringState=false;
+
+function fieldIds(){
+  return Array.from(document.querySelectorAll('#songApp input[id],#songApp select[id],#tourApp input[id],#tourApp select[id]'))
+    .map(e=>e.id)
+    .filter(id=>{
+      if(!id||LIVE_SKIP_IDS[id])return false;
+      if(/_scout_/.test(id))return false;
+      if(id==='same_event_bonus')return true;
+      return /^(s_|m_|t_|p_point_|p_pass_)/.test(id);
+    });
+}
+function collectScoutState(prefix){
+  return [1,2].map(i=>{
+    const typeEl=document.getElementById(`${prefix}_scout_${i}_type`);
+    if(!typeEl)return null;
+    const type=typeEl.value;
+    const cards=Array.from(document.querySelectorAll(`#${prefix}_scout_${i}_fields select`)).map(e=>Number(e.value)||0);
+    return{type,cards};
+  }).filter(Boolean);
+}
+function applyScoutState(prefix,list,isTour){
+  if(!list||!list.length)return;
+  list.forEach((s,idx)=>{
+    const i=idx+1;
+    const typeEl=document.getElementById(`${prefix}_scout_${i}_type`);
+    if(!typeEl||!s)return;
+    if(s.type&&scoutTypes[s.type])typeEl.value=s.type;
+    if(isTour)renderTourScoutFields(i);else renderScoutFields(prefix,i);
+    (s.cards||[]).forEach((v,n)=>{
+      const el=document.getElementById(`${prefix}_scout_${i}_card_${n}`);
+      if(el)el.value=String(Math.max(0,Math.min(5,Number(v)||0)));
+    });
+  });
+}
+function collectState(){
+  const values={};
+  fieldIds().forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el)return;
+    if(el.type==='checkbox'||el.type==='radio'){
+      if(el.type==='radio'){if(el.checked)values[id]=el.value;}
+      else values[id]=!!el.checked;
+    }else values[id]=el.value;
+  });
+  document.querySelectorAll('input[name="m_eventType"],input[name="t_eventType"]').forEach(el=>{
+    if(el.checked)values[el.name]=el.value;
+  });
+  const progress={};
+  for(let i=0;i<9;i++){
+    const p=document.getElementById(`p_point_${i}`),a=document.getElementById(`p_pass_${i}`);
+    if(p&&!p.readOnly&&p.value!=='')progress[`p_point_${i}`]=p.value;
+    if(a&&!a.readOnly&&a.value!=='')progress[`p_pass_${i}`]=a.value;
+  }
+  return{
+    v:2,
+    mode:safeStorageGet('eventCalculatorMode')||'',
+    values,
+    progress,
+    sameEventBonus:!!(document.getElementById('same_event_bonus')&&same_event_bonus.checked),
+    songBonus:{normal:collectScoutState('normal'),event:collectScoutState('event')},
+    tourBonus:collectScoutState('tour')
+  };
+}
+function scheduleSave(){
+  if(restoringState)return;
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>{
+    try{safeStorageSet(STATE_KEY,JSON.stringify(collectState()))}catch(e){}
+  },120);
+}
+function applyState(state){
+  if(!state||typeof state!=='object')return;
+  restoringState=true;
+  try{
+    const values=state.values||{};
+    Object.keys(values).forEach(id=>{
+      if(LIVE_SKIP_IDS[id])return;
+      if(id==='m_eventType'||id==='t_eventType'){
+        const el=document.querySelector(`input[name="${id}"][value="${values[id]}"]`);
+        if(el)el.checked=true;
+        return;
+      }
+      const el=document.getElementById(id);
+      if(!el)return;
+      if(el.type==='checkbox')el.checked=!!values[id];
+      else if(el.type==='radio'){if(String(values[id])===el.value)el.checked=true;}
+      else el.value=values[id]==null?'':String(values[id]);
+    });
+    if(state.sameEventBonus!=null&&document.getElementById('same_event_bonus'))same_event_bonus.checked=!!state.sameEventBonus;
+    if(state.songBonus){
+      applyScoutState('normal',state.songBonus.normal,false);
+      applyScoutState('event',state.songBonus.event,false);
+    }
+    if(state.tourBonus)applyScoutState('tour',state.tourBonus,true);
+    if(state.progress){
+      Object.keys(state.progress).forEach(id=>{
+        const el=document.getElementById(id);
+        if(el&&!el.readOnly)el.value=state.progress[id];
+      });
+    }
+    updateWorkUi('m');updateWorkUi('t');
+    updateEventSchedule();updateTourSchedule();
+    syncOptionCheckedStyles();
+  }finally{restoringState=false;}
+}
+function loadState(){
+  const raw=safeStorageGet(STATE_KEY);
+  if(!raw)return null;
+  try{return JSON.parse(raw)}catch(e){return null}
+}
+function syncNowFields(){
+  const now=isoLocalDateTime(new Date());
+  if(m_nowDateTime)m_nowDateTime.value=now;
+  if(t_now)t_now.value=now;
+  if(!m_manualSchedule.checked)updateEventSchedule();
+  else m_eventPeriod.textContent=formatEventPeriod(m_startDateTime.value,m_endDateTime.value);
+  if(!t_manualSchedule.checked)updateTourSchedule();
+  else t_eventPeriod.textContent=formatEventPeriod(t_startDateTime.value,t_endDateTime.value);
+}
+
 const rewardTableSong=[
  [0.6,3,0,0],[1,0,0,10],[4,3,0,0],[9,3,0,0],[14,3,0,0],[16,0,0,10],[26,3,0,0],[34,0,0,10],[36,5,0,0],[40,0,0,10],[42,5,0,0],[48,0,0,10],[54,5,0,0],[64,0,0,15],[105,0,1,0],[120,0,0,15],[255,0,1,0],[300,0,1,0]
 ];
@@ -313,9 +444,10 @@ function selectMode(mode){
   songApp.classList.toggle('hidden',mode!=='song');
   tourApp.classList.toggle('hidden',mode!=='tour');
   safeStorageSet('eventCalculatorMode',mode);
+  scheduleSave();
   if(mode==='tour')calcTour();
 }
-function backToMode(){songApp.classList.add('hidden');tourApp.classList.add('hidden');modeScreen.classList.remove('hidden');safeStorageRemove('eventCalculatorMode');try{window.scrollTo({top:0,behavior:'smooth'})}catch(e){window.scrollTo(0,0)}}
+function backToMode(){songApp.classList.add('hidden');tourApp.classList.add('hidden');modeScreen.classList.remove('hidden');safeStorageRemove('eventCalculatorMode');scheduleSave();try{window.scrollTo({top:0,behavior:'smooth'})}catch(e){window.scrollTo(0,0)}}
 function futureRewardBp(current,target,table){
   return table.reduce((sum,[pt,whistle,mega,dia])=>sum+(pt>current&&pt<=target?whistle+mega*10+dia/2:0),0);
 }
@@ -390,8 +522,8 @@ function calcTour(){
   tr_bp.textContent=fmt(totalBp)+'BP';tr_time.textContent=fmt(tours*12/60,1)+'時間';tr_natural.textContent=fmt(naturalByTime)+'BP';tr_rewards.textContent=fmt(rewards,1)+'BP';tr_dia.textContent=fmt(dia)+'個';tr_fans.textContent=fmt(tours*((fans[bp13]||0)*3+(fans[bp4]||0)))+'人';
   let warn='';if(current>target)warn='現在ポイントが目標ポイントを上回っています。';else if(perTour<=0)warn='スコア・BP・特効倍率を確認してください。';else if(!isNaN(now)&&!isNaN(start)&&now<start)warn='現在日時がイベント開始前です。';else if(!isNaN(now)&&!isNaN(end)&&now>end)warn='現在日時がイベント終了後です。';showWarn('t_warn',warn);
 }
-function initTourDates(){const now=new Date();if(!t_now.value)t_now.value=isoLocalDateTime(now);updateTourSchedule()}
-function resetTour(){t_target.value=350;t_current.value='';t_score13.value=400;t_score4.value=450;t_bonus.value='';t_fever.value=100;t_bp13.value=3;t_bp4.value=10;t_whistle.value='';t_megaphone.value='';t_ownedDia.value='';t_natural.value=40;t_workEnable.checked=false;t_workLv.value=10;t_workBp.value=0;t_manualSchedule.checked=false;initTourDates();calcTour();}
+function initTourDates(){syncNowFields();updateTourSchedule()}
+function resetTour(){t_target.value=350;t_current.value='';t_score13.value=400;t_score4.value=450;t_bonus.value='';t_fever.value=100;t_bp13.value=3;t_bp4.value=10;t_whistle.value='';t_megaphone.value='';t_ownedDia.value='';t_natural.value=40;t_workEnable.checked=false;t_workLv.value=10;t_workBp.value=0;t_manualSchedule.checked=false;initTourDates();calcTour();scheduleSave();}
 
 const R5=[0,20,50,75,100,150],R4=[0,5,15,25,35,50],R3=[0,1,2,3,4,5];
 const R4s=[0,7,20,30,45,60],R4t=[0,4,11,18,25,35],R5t=[0,15,35,50,70,100];
@@ -407,7 +539,7 @@ let calculatedTourBonus=0;
 function tourScoutMarkup(index){const id=`tour_scout_${index}`;return `<div class="scout"><div class="scout-title">スカウト${index}</div><select class="scout-select tour-scout-select" id="${id}_type" data-index="${index}">${Object.entries(scoutTypes).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('')}</select><div class="scout-fields" id="${id}_fields"></div></div>`}
 function renderTourScoutFields(index){const base=`tour_scout_${index}`,type=document.getElementById(`${base}_type`).value,box=document.getElementById(`${base}_fields`);box.innerHTML=scoutTypes[type].cards.map((card,n)=>`<div class="row"><label>${card[0]}カード</label>${cardBonusSelect(`${base}_card_${n}`,card[1],'tour-bonus-input')}<span class="unit">枚</span></div>`).join('');box.querySelectorAll('select').forEach(e=>e.addEventListener('change',calculateTourBonus))}
 function renderTourScouts(){tour_scouts.innerHTML=tourScoutMarkup(1)+tourScoutMarkup(2);[1,2].forEach(renderTourScoutFields);document.querySelectorAll('.tour-scout-select').forEach(e=>e.addEventListener('change',()=>{renderTourScoutFields(Number(e.dataset.index));calculateTourBonus()}))}
-function calculateTourBonus(){let total=0;document.querySelectorAll('#tour_scouts .tour-bonus-input').forEach(e=>{total+=bonusFromInput(e)});calculatedTourBonus=total;tb_total.textContent=fmt(total,1)+'%';calcTour()}
+function calculateTourBonus(){let total=0;document.querySelectorAll('#tour_scouts .tour-bonus-input').forEach(e=>{total+=bonusFromInput(e)});calculatedTourBonus=total;tb_total.textContent=fmt(total,1)+'%';calcTour();scheduleSave()}
 let calculatedBonus={normal:0,event:0};
 function val(id){return Number(document.getElementById(id).value)||0}
 function optional(id,fallback){const x=document.getElementById(id).value;return x===''?fallback:Number(x)/100}
@@ -445,9 +577,14 @@ function calculateBonus(){
   document.getElementById('event_scouts').classList.toggle('event-scouts-disabled',same);
   document.getElementById('b_normal').textContent=fmt(calculatedBonus.normal,1)+'%';
   document.getElementById('b_event').textContent=fmt(calculatedBonus.event,1)+'%';
-  calcStart();calcMid();if(document.getElementById('progressTable'))calcProgress();
+  calcStart();calcMid();if(document.getElementById('progressDays'))calcProgress();
+  scheduleSave();
 }
-function passPlays(total,selected){let remain=total,plays=0;for(const size of [2000,1000,500,100]){if(size>selected)continue;const n=floor(remain/size);plays+=n;remain-=n*size}return plays}
+function passPlays(total,selected){
+  selected=Number(selected)||0;
+  if(selected<=0||total<=0)return 0;
+  return floor(total/selected);
+}
 const fans={1:10,2:16,3:20,6:30,10:40};
 function calcStart(){const target=val('s_target')*10000,ns=val('s_normalScore'),es=val('s_eventScore'),bp=val('s_bp');const nb=optional('s_normalBonus',calculatedBonus.normal/100),eb=optional('s_eventBonus',calculatedBonus.event/100);const normalBase=2000+floor(ns*10000*.0002),eventBase=10000+floor(es*10000*.0002);const combined10=normalBase*(1+nb)*10+eventBase*(1+eb);const perBp=floor(combined10/10);const pointsPerPlay=perBp*bp;const plays=pointsPerPlay>0?ceil(target/pointsPerPlay):0;const totalBp=plays*bp;const totalPass=totalBp*10;const eplays=passPlays(totalPass,val('s_pass'));const noBonusPerBp=(normalBase*10+eventBase)/10;const noBonusPlays=noBonusPerBp>0?ceil(target/(noBonusPerBp*bp)):0;const dia=totalBp*2-val('s_natural')*2*8-val('s_whistle')*2-val('s_rewardDia')-val('s_ownedDia');const gacha=Math.max(floor(((noBonusPlays*bp-totalBp)*2)/35),0);r_plays.textContent=fmt(plays)+'回';r_normalTime.textContent=fmt(plays*3/60,1)+'時間';r_eventPlays.textContent=fmt(eplays)+'回';r_totalTime.textContent=fmt((plays+eplays)*3/60,1)+'時間';r_bp.textContent=fmt(totalBp)+'BP';r_dia.textContent=fmt(Math.max(dia,0))+'個';r_gacha.textContent=fmt(gacha)+'連まで';r_fans.textContent=fmt(plays*(fans[bp]||0))+'人';showWarn('s_warn',pointsPerPlay<=0?'入力値を確認してください。':'')}
 function calcMid(){
@@ -493,9 +630,21 @@ function isoLocal(d){const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2
 function isoLocalDateTime(d){const h=String(d.getHours()).padStart(2,'0'),mi=String(d.getMinutes()).padStart(2,'0');return isoLocal(d)+'T'+h+':'+mi}
 function shortDate(d){return `${d.getMonth()+1}/${d.getDate()}`}
 function initProgress(){
-  const rows=['日付','日別目標','ポイント数','所持パス数','パス込みポイント数','日別目標まで','最終目標まで'];
-  progressTable.querySelector('tbody').innerHTML=rows.map((name,r)=>`<tr><td>${name}</td>${Array.from({length:9},(_,i)=>{if(r===0)return `<td class="derived" id="p_date_${i}"></td>`;if(r===1)return `<td class="derived" id="p_goal_${i}"></td>`;if(r===2)return `<td><input id="p_point_${i}" type="number" min="0" step="1"></td>`;if(r===3)return `<td><input id="p_pass_${i}" type="number" min="0" step="1"></td>`;return `<td class="derived" id="p_calc_${r}_${i}">-</td>`}).join('')}</tr>`).join('');
-  progressTable.querySelectorAll('input').forEach(e=>e.addEventListener('input',calcProgress));
+  progressDays.innerHTML=Array.from({length:9},(_,i)=>`<article class="progress-day" id="p_card_${i}" data-day="${i}">
+    <div class="progress-day-head">
+      <div><div class="day-title">${i+1}日目</div><div class="day-date" id="p_date_${i}"></div></div>
+      <span class="progress-day-badge" id="p_badge_${i}" hidden>今日</span>
+    </div>
+    <div class="progress-day-goal"><span>日別目標</span><strong id="p_goal_${i}">-</strong></div>
+    <div class="row"><label for="p_point_${i}">ポイント数</label><input id="p_point_${i}" type="number" min="0" step="1" inputmode="decimal"><span class="unit">万pt</span></div>
+    <div class="row"><label for="p_pass_${i}">所持パス数</label><input id="p_pass_${i}" type="number" min="0" step="1" inputmode="numeric"><span class="unit">枚</span></div>
+    <div class="progress-day-stats">
+      <div class="progress-day-stat"><span>パス込みポイント</span><strong id="p_calc_4_${i}">-</strong></div>
+      <div class="progress-day-stat" id="p_stat_daily_${i}"><span>日別目標まで</span><strong id="p_calc_5_${i}">-</strong></div>
+      <div class="progress-day-stat" id="p_stat_final_${i}"><span>最終目標まで</span><strong id="p_calc_6_${i}">-</strong></div>
+    </div>
+  </article>`).join('');
+  progressDays.querySelectorAll('input').forEach(e=>e.addEventListener('input',()=>{calcProgress();scheduleSave()}));
   calcProgress();
 }
 function calcProgress(){
@@ -519,8 +668,14 @@ function calcProgress(){
   for(let i=0;i<9;i++){
     const d=new Date(start);d.setDate(start.getDate()+i);dates.push(shortDate(d));
     const goal=target*(i+1)/9;goals.push(goal);
-    const dateCell=document.getElementById(`p_date_${i}`);dateCell.textContent=`${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()}`;dateCell.classList.toggle('current-day',i===currentIndex);
-    document.getElementById(`p_goal_${i}`).textContent=fmt(Math.floor(goal));
+    const card=document.getElementById(`p_card_${i}`);
+    const dateCell=document.getElementById(`p_date_${i}`);
+    const badge=document.getElementById(`p_badge_${i}`);
+    dateCell.textContent=`${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()}`;
+    card.classList.toggle('is-current',i===currentIndex);
+    card.classList.toggle('is-future',currentIndex>=0&&i>currentIndex);
+    badge.hidden=i!==currentIndex;
+    document.getElementById(`p_goal_${i}`).textContent=fmt(Math.floor(goal))+'万pt';
     const pointEl=document.getElementById(`p_point_${i}`),passEl=document.getElementById(`p_pass_${i}`);
     pointEl.readOnly=false;passEl.readOnly=false;pointEl.classList.remove('current-day');passEl.classList.remove('current-day');
     if(i===currentIndex){
@@ -528,6 +683,8 @@ function calcProgress(){
       pointEl.readOnly=true;passEl.readOnly=true;pointEl.classList.add('current-day');passEl.classList.add('current-day');
     }
     const hasPoint=pointEl.value!=='';
+    const dailyStat=document.getElementById(`p_stat_daily_${i}`),finalStat=document.getElementById(`p_stat_final_${i}`);
+    dailyStat.classList.remove('ok','ng');finalStat.classList.remove('ok','ng');
     if(hasPoint){
       const actual=val(`p_point_${i}`)+Math.floor(val(`p_pass_${i}`)/100)*eventPer100;
       actuals.push(actual);latest=actual;
@@ -535,6 +692,8 @@ function calcProgress(){
       const daily=actual-goal,final=actual-target;
       document.getElementById(`p_calc_5_${i}`).textContent=(daily>=0?'+':'')+fmt(Math.floor(daily));
       document.getElementById(`p_calc_6_${i}`).textContent=(final>=0?'+':'')+fmt(Math.floor(final));
+      dailyStat.classList.add(daily>=0?'ok':'ng');
+      finalStat.classList.add(final>=0?'ok':'ng');
     }else{
       actuals.push(null);
       [4,5,6].forEach(r=>document.getElementById(`p_calc_${r}_${i}`).textContent='-');
@@ -545,17 +704,19 @@ function calcProgress(){
   drawProgressChart(dates,goals,actuals,target);
 }
 function drawProgressChart(labels,goals,actuals,target){
-  const svg=progressChart,W=900,H=430,pad={l:70,r:26,t:28,b:58};
+  const svg=progressChart,mobile=window.matchMedia('(max-width:600px)').matches;
+  const W=900,H=mobile?360:430,pad=mobile?{l:48,r:14,t:22,b:44}:{l:70,r:26,t:28,b:58};
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
   const vals=goals.concat(actuals.filter(v=>v!==null));const max=Math.max(target,...vals,1)*1.12;
   const x=i=>pad.l+i*(W-pad.l-pad.r)/(labels.length-1);const y=v=>H-pad.b-v*(H-pad.t-pad.b)/max;
   const ticks=5;let out=`<rect width="${W}" height="${H}" fill="white" rx="10"/>`;
-  for(let i=0;i<=ticks;i++){const v=max*i/ticks,yy=y(v);out+=`<line x1="${pad.l}" y1="${yy}" x2="${W-pad.r}" y2="${yy}" stroke="#e5e7ef"/><text x="${pad.l-10}" y="${yy+4}" text-anchor="end" font-size="12" fill="#6d7285">${Math.round(v).toLocaleString('ja-JP')}</text>`}
-  labels.forEach((lab,i)=>out+=`<text x="${x(i)}" y="${H-pad.b+28}" text-anchor="middle" font-size="12" fill="#6d7285">${lab}</text>`);
-  const path=(arr)=>arr.map((v,i)=>(i?'L':'M')+x(i)+','+y(v)).join(' ');
-  out+=`<path d="${path(goals)}" fill="none" stroke="#5d9df6" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>`;
-  goals.forEach((v,i)=>out+=`<circle cx="${x(i)}" cy="${y(v)}" r="5" fill="#5d9df6"/><text x="${x(i)}" y="${y(v)-11}" text-anchor="middle" font-size="11" fill="#485063">${Math.floor(v).toLocaleString('ja-JP')}</text>`);
+  const labelFs=mobile?10:12,pointFs=mobile?9:11;
+  for(let i=0;i<=ticks;i++){const v=max*i/ticks,yy=y(v);out+=`<line x1="${pad.l}" y1="${yy}" x2="${W-pad.r}" y2="${yy}" stroke="#e5e7ef"/><text x="${pad.l-8}" y="${yy+4}" text-anchor="end" font-size="${labelFs}" fill="#6d7285">${Math.round(v).toLocaleString('ja-JP')}</text>`}
+  labels.forEach((lab,i)=>out+=`<text x="${x(i)}" y="${H-pad.b+24}" text-anchor="middle" font-size="${labelFs}" fill="#6d7285">${lab}</text>`);
+  out+=`<path d="${goals.map((v,i)=>(i?'L':'M')+x(i)+','+y(v)).join(' ')}" fill="none" stroke="#5d9df6" stroke-width="${mobile?3:4}" stroke-linecap="round" stroke-linejoin="round"/>`;
+  goals.forEach((v,i)=>{out+=`<circle cx="${x(i)}" cy="${y(v)}" r="${mobile?4:5}" fill="#5d9df6"/>`;if(!mobile||i%2===0||i===goals.length-1)out+=`<text x="${x(i)}" y="${y(v)-10}" text-anchor="middle" font-size="${pointFs}" fill="#485063">${Math.floor(v).toLocaleString('ja-JP')}</text>`});
   let segments=[],seg=[];actuals.forEach((v,i)=>{if(v===null){if(seg.length)segments.push(seg);seg=[]}else seg.push([i,v])});if(seg.length)segments.push(seg);
-  segments.forEach(a=>{if(a.length>1)out+=`<path d="${a.map(([i,v],n)=>(n?'L':'M')+x(i)+','+y(v)).join(' ')}" fill="none" stroke="#ef7777" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>`;a.forEach(([i,v])=>out+=`<circle cx="${x(i)}" cy="${y(v)}" r="5" fill="#ef7777"/><text x="${x(i)}" y="${y(v)-11}" text-anchor="middle" font-size="11" fill="#8a4141">${Math.floor(v).toLocaleString('ja-JP')}</text>`) });
+  segments.forEach(a=>{if(a.length>1)out+=`<path d="${a.map(([i,v],n)=>(n?'L':'M')+x(i)+','+y(v)).join(' ')}" fill="none" stroke="#ef7777" stroke-width="${mobile?3:4}" stroke-linecap="round" stroke-linejoin="round"/>`;a.forEach(([i,v])=>{out+=`<circle cx="${x(i)}" cy="${y(v)}" r="${mobile?4:5}" fill="#ef7777"/>`;if(!mobile||i===a[a.length-1][0])out+=`<text x="${x(i)}" y="${y(v)-10}" text-anchor="middle" font-size="${pointFs}" fill="#8a4141">${Math.floor(v).toLocaleString('ja-JP')}</text>`})});
   svg.innerHTML=out;
 }
 
@@ -587,32 +748,50 @@ function updateEventSchedule(){
   m_eventPeriod.textContent=formatEventPeriod(m_startDateTime.value,m_endDateTime.value);
 }
 function initMidDates(){
-  const now=new Date();
-  if(!m_nowDateTime.value)m_nowDateTime.value=isoLocalDateTime(now);
+  syncNowFields();
   updateEventSchedule();
 }
 
-function resetStart(){['s_target','s_normalScore','s_eventScore','s_natural'].forEach((id,i)=>document.getElementById(id).value=[2200,400,400,40][i]);['s_normalBonus','s_eventBonus','s_whistle','s_rewardDia','s_ownedDia'].forEach(id=>document.getElementById(id).value='');s_bp.value=6;s_pass.value=1000;calcStart()}
-document.querySelectorAll('#start input,#start select,#mid input,#mid select').forEach(e=>e.addEventListener('input',()=>{if(e.id==='m_nowDateTime'&&!m_manualSchedule.checked)updateEventSchedule();else if(e.id==='m_startDateTime'||e.id==='m_endDateTime')m_eventPeriod.textContent=formatEventPeriod(m_startDateTime.value,m_endDateTime.value);if(e.id==='m_workEnable'||e.id==='m_workLv')updateWorkUi('m');calcStart();calcMid();calcProgress()}));
-document.querySelectorAll('input[name="m_eventType"]').forEach(e=>e.addEventListener('change',()=>{updateEventSchedule();calcMid();calcProgress()}));
-m_manualSchedule.addEventListener('change',()=>{updateEventSchedule();calcMid();calcProgress()});
-m_workEnable.addEventListener('change',()=>{updateWorkUi('m');calcMid()});
-document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab,.panel').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(b.dataset.tab).classList.add('active')});
+function resetStart(){['s_target','s_normalScore','s_eventScore','s_natural'].forEach((id,i)=>document.getElementById(id).value=[2200,400,400,40][i]);['s_normalBonus','s_eventBonus','s_whistle','s_rewardDia','s_ownedDia'].forEach(id=>document.getElementById(id).value='');s_bp.value=6;s_pass.value=1000;calcStart();scheduleSave()}
+function bindFormEvents(selector,handler){
+  document.querySelectorAll(selector).forEach(e=>{
+    e.addEventListener('input',handler);
+    e.addEventListener('change',handler);
+  });
+}
+function onSongFormEvent(e){
+  const el=e.target;
+  if(el&&(el.id==='m_startDateTime'||el.id==='m_endDateTime'))m_eventPeriod.textContent=formatEventPeriod(m_startDateTime.value,m_endDateTime.value);
+  if(el&&(el.id==='m_workEnable'||el.id==='m_workLv'))updateWorkUi('m');
+  calcStart();calcMid();calcProgress();scheduleSave();
+}
+function onTourFormEvent(e){
+  const el=e.target;
+  if(el&&(el.id==='t_startDateTime'||el.id==='t_endDateTime'))t_eventPeriod.textContent=formatEventPeriod(t_startDateTime.value,t_endDateTime.value);
+  if(el&&(el.id==='t_workEnable'||el.id==='t_workLv'))updateWorkUi('t');
+  calcTour();scheduleSave();
+}
+bindFormEvents('#start input,#start select,#mid input,#mid select',onSongFormEvent);
+document.querySelectorAll('input[name="m_eventType"]').forEach(e=>e.addEventListener('change',()=>{updateEventSchedule();calcMid();calcProgress();scheduleSave()}));
+m_manualSchedule.addEventListener('change',()=>{updateEventSchedule();calcMid();calcProgress();scheduleSave()});
+m_workEnable.addEventListener('change',()=>{updateWorkUi('m');calcMid();scheduleSave()});
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab,.panel').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(b.dataset.tab).classList.add('active');if(b.dataset.tab==='progress'){calcProgress();const cur=document.querySelector('.progress-day.is-current');if(cur)try{cur.scrollIntoView({behavior:'smooth',block:'nearest'})}catch(e){}}});
 renderScouts();
-initMidDates();
-updateWorkUi('m');
-document.getElementById('same_event_bonus').addEventListener('change',calculateBonus);
-initProgress();
-calculateBonus();
 renderTourScouts();
-initTourDates();
+initProgress();
+const savedState=loadState();
+if(savedState)applyState(savedState);
+syncNowFields();
+updateWorkUi('m');
 updateWorkUi('t');
+document.getElementById('same_event_bonus').addEventListener('change',calculateBonus);
+calculateBonus();
 calculateTourBonus();
 document.querySelectorAll('.tour-tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tour-tab,.tour-panel').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(b.dataset.tourTab).classList.add('active')});
-document.querySelectorAll('#tourMid input,#tourMid select').forEach(e=>e.addEventListener('input',()=>{if(e.id==='t_now'&&!t_manualSchedule.checked)updateTourSchedule();else if(e.id==='t_startDateTime'||e.id==='t_endDateTime')t_eventPeriod.textContent=formatEventPeriod(t_startDateTime.value,t_endDateTime.value);if(e.id==='t_workEnable'||e.id==='t_workLv')updateWorkUi('t');calcTour()}));
-document.querySelectorAll('input[name="t_eventType"]').forEach(e=>e.addEventListener('change',()=>{updateTourSchedule();calcTour()}));
-t_manualSchedule.addEventListener('change',()=>{updateTourSchedule();calcTour()});
-t_workEnable.addEventListener('change',()=>{updateWorkUi('t');calcTour()});
+bindFormEvents('#tourMid input,#tourMid select',onTourFormEvent);
+document.querySelectorAll('input[name="t_eventType"]').forEach(e=>e.addEventListener('change',()=>{updateTourSchedule();calcTour();scheduleSave()}));
+t_manualSchedule.addEventListener('change',()=>{updateTourSchedule();calcTour();scheduleSave()});
+t_workEnable.addEventListener('change',()=>{updateWorkUi('t');calcTour();scheduleSave()});
 
 function syncOptionCheckedStyles(){
   document.querySelectorAll('.event-type-option').forEach(function(label){
@@ -625,7 +804,15 @@ document.addEventListener('change',function(e){
 });
 syncOptionCheckedStyles();
 
-const savedMode=safeStorageGet('eventCalculatorMode');
+function refreshLiveClock(){
+  syncNowFields();
+  calcMid();calcTour();calcProgress();
+}
+setInterval(refreshLiveClock,30000);
+document.addEventListener('visibilitychange',function(){if(!document.hidden)refreshLiveClock()});
+
+const savedMode=(savedState&&savedState.mode)||safeStorageGet('eventCalculatorMode');
 if(savedMode==='song'||savedMode==='tour')selectMode(savedMode);
+scheduleSave();
 </script>
 </body></html>
